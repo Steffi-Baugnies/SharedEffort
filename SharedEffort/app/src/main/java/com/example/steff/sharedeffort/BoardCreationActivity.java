@@ -43,6 +43,8 @@ public class BoardCreationActivity extends AppCompatActivity {
                     try {
                         jsonObject.put("boardName", boardName);
                         jsonObject.put("adminPswd", adminPswd);
+                        jsonObject.put("persId", ConnectedUser.getInstance().getConnectedUser());
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -55,12 +57,20 @@ public class BoardCreationActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                            String message = null;
+                            try {
+                                message = jsonObject.get("message").toString();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                             if(state == 1){
-                                System.out.println("Ca a marché");
+                                PreviousToast.getInstance().setMessage(message);
+                                Intent familyBoardActivity = new Intent(BoardCreationActivity.this, FamilyBoardActivity.class);
+                                startActivity(familyBoardActivity);
                             }
                             else {
-                                System.out.println("Ca n'a pas marché");
-                                //faire un toast get jsonObject message
+                                Toaster toaster = new Toaster(message, BoardCreationActivity.this);
                             }
                         }
                     };

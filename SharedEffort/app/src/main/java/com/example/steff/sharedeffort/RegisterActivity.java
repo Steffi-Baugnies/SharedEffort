@@ -81,28 +81,32 @@ public class RegisterActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                            String message = null;
+                            try {
+                                message = jsonObject.get("message").toString();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             if(state == 1){
-                                //Passer à l'activité de login et mettre un toast 'le compte a été créé'
-                                System.out.println("Ca a marché");
+                                PreviousToast.getInstance().setMessage(message);
                                 Intent loginActivity = new Intent(RegisterActivity.this, LoginActivity.class);
                                 startActivity(loginActivity);
                             }
-                            else {
-                                System.out.println("Ca n'a pas marché");
-                                //faire un toast get jsonObject message
+                            else{
+
+                                Toaster toaster = new Toaster(message, RegisterActivity.this);
+                                toaster.showToast();
                             }
+
                         }
                     };
                     new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "register", jsonObject, eventNotifier)).start();
 
                 }
                 else {
-                    String errorMessage = "Les mots de passe ne correspondent pas, veuillez réessayer";
-                    Toast toast = Toast.makeText(RegisterActivity.this,errorMessage, Toast.LENGTH_LONG);
-                    TextView view = toast.getView().findViewById(android.R.id.message);
-                    view.setGravity(Gravity.CENTER);
-                    toast.setGravity(Gravity.CENTER ,0,0);
-                    toast.show();
+                    String message = "Les mots de passe ne correspondent pas, veuillez réessayer";
+                    Toaster toaster = new Toaster(message, RegisterActivity.this);
+                    toaster.showToast();
                 }
             }
         });

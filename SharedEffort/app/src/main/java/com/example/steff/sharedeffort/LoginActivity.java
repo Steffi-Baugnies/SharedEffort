@@ -32,6 +32,11 @@ public class LoginActivity extends AppCompatActivity {
         mLoginPassword = findViewById(R.id.activity_login_login_password);
         InitRegisterButton();
         InitLoginButton();
+        String previousMessage = PreviousToast.getInstance().getMessage();
+        if(previousMessage != null){
+            Toaster toaster = new Toaster(previousMessage, LoginActivity.this);
+            toaster.showToast();
+        }
     }
 
     private void InitLoginButton(){
@@ -53,15 +58,30 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void RequestComplete(JSONObject jsonObject) {
                             int loginState = 0;
+                            int userId = -1;
                             try {
                                 loginState = (int) jsonObject.get("connectionStatus");
+                                userId = (int) jsonObject.get("userId");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            if (loginState == 1) {
-                                // Je pense que c'est ici :D
-                                Intent boardSelectionActivity = new Intent(LoginActivity.this, BoardSelectionActivity.class);
-                                startActivity(boardSelectionActivity);
+                            if (loginState == 1 && userId != -1) {
+                                ConnectedUser.getInstance().setConnectedUser(userId);
+                                int familyId = -1;
+                                try {
+                                    familyId = jsonObject.getInt("familyId");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                if(familyId != -1){
+                                    Intent familyBoardActivity = new Intent(LoginActivity.this, FamilyBoardActivity.class);
+                                    startActivity(familyBoardActivity);
+                                }
+                                else{
+                                    Intent boardSelectionActivity = new Intent(LoginActivity.this, BoardSelectionActivity.class);
+                                    startActivity(boardSelectionActivity);
+                                }
+
 
                             } else {
                                 try {

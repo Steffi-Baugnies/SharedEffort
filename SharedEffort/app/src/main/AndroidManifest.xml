@@ -20,7 +20,8 @@
             android:exported="true" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".BoardSelectionActivity" />
-        <activity android:name=".BoardCreationActivity"/>
+        <activity android:name=".BoardCreationActivity" />
+        <activity android:name=".FamilyBoardActivity"></activity>
     </application>
 
 </manifest>

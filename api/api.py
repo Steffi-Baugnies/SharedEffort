@@ -29,12 +29,17 @@ def login():
 	password = jsonData["password"]
 	passwordHash = ''
 	userId = -1
+	familyId = -1
 	cursor = mysql.connection.cursor()
 	cursor.callproc('proc_getUserPasswordHash',[mailAddress])
 	for fields in cursor:
 		userId = fields[0]
+		familyId = fields[2]
 		passwordHash = fields[1]
 	cursor.close()
+	
+	if(familyId is None):
+		familyId = -1
 	
 	state = 0
 	if passwordHash != '':
@@ -46,7 +51,7 @@ def login():
 	else:
 		response = 'Nom d\'utilisateur incorrect'
 		
-	return jsonify({'connectionStatus': state, 'message' : response, 'userId' : userId})
+	return jsonify({'connectionStatus': state, 'message' : response, 'userId' : userId, 'familyId' : familyId})
 	
 @app.route('/register', methods=['POST'])
 def register():
@@ -79,16 +84,17 @@ def createBoard():
 	jsonData = request.json
 	boardName = jsonData["boardName"]
 	adminPswd = jsonData["adminPswd"]
-	cursor = mysql.connection.cursor();
-	cursor.callproc('proc_createBoard', [boardName, adminPswd])
-	
-	cursor.close()
-	mysql.connection.commit()
+	persId = jsonData["persId"]
+	cursor = mysql.connection.cursor()
+	cursor.callproc('proc_createBoard', [boardName, adminPswd, persId])
 	
 	rowCount = 0
 	state = 0
 	for fields in cursor:
 		rowCount = fields[0]
+	
+	cursor.close()
+	mysql.connection.commit()
 	if rowCount > 0:
 		response = 'Le tableau a bien été créé'
 		state = 1
