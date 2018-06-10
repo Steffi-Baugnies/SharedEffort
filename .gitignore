@@ -1,3 +1,6 @@
+#Database
+api/db_credentials.py
+
 # Built application files
 *.apk
 *.ap_
