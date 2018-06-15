@@ -8,6 +8,7 @@ from flask_mysqldb import MySQL
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 import db_credentials as config
+import MySQLdb as my
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -63,19 +64,24 @@ def register():
 	fName = jsonData["fName"]
 	birthdate = jsonData["birthdate"]
 	cursor = mysql.connection.cursor()
-	cursor.callproc('proc_createUser', [mailAddress, password, lName, fName, birthdate])
-	
 	rowCount = 0
 	state = 0
-	for fields in cursor:
-		rowCount = fields[0]
+	response = ''
+	try:
+		cursor.callproc('proc_createUser', [mailAddress, password, lName, fName, birthdate])
+		for fields in cursor:
+			rowCount = fields[0]
+		mysql.connection.commit()
+		if rowCount > 0:
+			response = 'Le compte a bien été créé'
+			state = 1
+		else: 
+			response = 'Erreur interne, veuillez réessayer plus tard'
+	except my.Error as e:
+		response = "L'adresse e-mail entrée est déjà utilisée"
 	cursor.close()
-	mysql.connection.commit()
-	if rowCount > 0:
-		response = 'Le compte a bien été créé'
-		state = 1
-	else: 
-		response = 'Erreur interne, veuillez réessayer plus tard'
+	
+	print(response)
 	return jsonify({'registrationStatus': state, 'message' : response})
 
 @app.route('/createBoard', methods=['POST'])
@@ -101,6 +107,48 @@ def createBoard():
 	else:
 		response = 'Erreur interne, veuillez réessayer plus tard'
 	return jsonify({'boardCreationStatus': state, 'message' : response})
+
+
+@app.route('/board/familyInfo', methods=["POST"])
+def getFamilyInfo():
+	jsonData = request.json
+	familyId = jsonData["familyId"]
+	cursor = mysql.connection.cursor()
+	familyMembers = []
+	cursor.callproc('proc_getUsersFromFamily', [familyId])
+	for familyMember in cursor:
+		familyMember = {
+			'id' : familyMember[0],
+			'lname' : familyMember[1], 
+			'fname' : familyMember[2]
+		}
+		familyMembers.append(familyMember)
+	cursor.close()
+	
+	return jsonify({'familyMembers': familyMembers})
+	
+@app.route('/board/personTasks', methods=["POST"])
+def getTasksFromPerson():
+	jsonData = request.json
+	familyId = jsonData["familyId"]
+	fName = jsonData["fName"]
+	cursor = mysql.connection.cursor()
+	personTasks = []
+	cursor.callproc('proc_getTasksFromPerson', [familyId, fName])
+	for task in cursor:
+		task = {
+			'id' : task[0], 
+			'nomTache' : task[1],
+			'nbPointsTache' : task[2],
+			'nbPointsTransfert' : task[3],
+			'dateTache' : task[4],
+			'estFaite' : task[5],
+			'idPersonne' : task[6]
+		}
+		personTasks.append(task)
+	cursor.close()
+	
+	return jsonify({'personTasks' : personTasks})
 
 if __name__ == '__main__':
 	app.run(debug=True, threaded=True)

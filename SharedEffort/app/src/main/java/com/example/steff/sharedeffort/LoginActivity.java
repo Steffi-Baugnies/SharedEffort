@@ -1,6 +1,5 @@
 package com.example.steff.sharedeffort;
 
-import android.app.Application;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,8 +13,6 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import static android.widget.Toast.LENGTH_SHORT;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -66,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             if (loginState == 1 && userId != -1) {
-                                ConnectedUser.getInstance().setConnectedUser(userId);
+                                ConnectedUserInfo.getInstance().setConnectedUser(userId);
                                 int familyId = -1;
                                 try {
                                     familyId = jsonObject.getInt("familyId");
@@ -74,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 if(familyId != -1){
+                                    ConnectedUserInfo.getInstance().setFamilyId(familyId);
                                     Intent familyBoardActivity = new Intent(LoginActivity.this, FamilyBoardActivity.class);
                                     startActivity(familyBoardActivity);
                                 }
@@ -81,9 +79,8 @@ public class LoginActivity extends AppCompatActivity {
                                     Intent boardSelectionActivity = new Intent(LoginActivity.this, BoardSelectionActivity.class);
                                     startActivity(boardSelectionActivity);
                                 }
-
-
-                            } else {
+                            }
+                            else {
                                 try {
                                     setErrorMessage(jsonObject.get("message").toString());
                                 } catch (JSONException e) {

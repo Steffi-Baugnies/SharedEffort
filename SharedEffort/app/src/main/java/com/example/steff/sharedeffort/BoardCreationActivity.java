@@ -43,7 +43,7 @@ public class BoardCreationActivity extends AppCompatActivity {
                     try {
                         jsonObject.put("boardName", boardName);
                         jsonObject.put("adminPswd", adminPswd);
-                        jsonObject.put("persId", ConnectedUser.getInstance().getConnectedUser());
+                        jsonObject.put("persId", ConnectedUserInfo.getInstance().getConnectedUser());
 
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -18,12 +18,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Mot de passe administrateur"
+        android:inputType="textPassword"
         />
     <EditText
         android:id="@+id/activity_boardCreation_adminPassword_confirmation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Confirmation du mot de passe administrateur"
+        android:inputType="textPassword"
         />
     <Button
         android:id="@+id/activity_boardCreation_boardCreation_btn"

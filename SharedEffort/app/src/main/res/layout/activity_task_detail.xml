@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TaskDetailActivity"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/activity_taskDetail_taskName_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nom de la tâche"/>
+    <TextView
+        android:id="@+id/activity_taskDetail_taskName"
+        app:layout_constraintTop_toBottomOf="@id/activity_taskDetail_taskName_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/activity_taskDetail_points_text"
+        app:layout_constraintTop_toBottomOf="@id/activity_taskDetail_taskName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre de points"/>
+    <TextView
+        android:id="@+id/activity_taskDetail_points"
+        app:layout_constraintTop_toBottomOf="@id/activity_taskDetail_points_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/activity_taskDetail_pointsForTransfer_text"
+        app:layout_constraintTop_toBottomOf="@id/activity_taskDetail_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre de points nécessaires pour le transfert"/>
+    <TextView
+        android:id="@+id/activity_taskDetail_pointsForTransfer"
+        app:layout_constraintTop_toBottomOf="@id/activity_taskDetail_pointsForTransfer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/activity_taskDetail_date_text"
+        app:layout_constraintTop_toBottomOf="@id/activity_taskDetail_pointsForTransfer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date et heure de la tâche"/>
+    <TextView
+        android:id="@+id/activity_taskDetail_Date"
+        app:layout_constraintTop_toBottomOf="@id/activity_taskDetail_date_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+</android.support.constraint.ConstraintLayout>
