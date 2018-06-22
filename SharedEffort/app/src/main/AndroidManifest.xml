@@ -29,7 +29,8 @@
         <activity android:name=".BoardSelectionActivity" />
         <activity android:name=".BoardCreationActivity" />
         <activity android:name=".FamilyBoardActivity" />
-        <activity android:name=".TaskDetailActivity"></activity>
+        <activity android:name=".TaskDetailActivity" />
+        <activity android:name=".AddTaskActivity"></activity>
     </application>
 
 </manifest>

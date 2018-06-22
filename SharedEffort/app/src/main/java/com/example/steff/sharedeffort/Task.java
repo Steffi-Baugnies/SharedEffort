@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Task implements Parcelable{
@@ -12,7 +14,7 @@ public class Task implements Parcelable{
     public String taskName;
     public int points;
     public int pointsForTransfert;
-    public Date taskDate;
+    public LocalDate taskDate;
     public boolean isDone;
     public int personId;
 
@@ -21,11 +23,10 @@ public class Task implements Parcelable{
         this.taskName = taskName;
         this.points = points;
         this.pointsForTransfert = pointsForTransfert;
-        try {
-            this.taskDate = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z").parse(taskDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy hh:mm:ss z");
+        this.taskDate = LocalDate.parse(taskDate, dateTimeFormatter);
+
         this.isDone = isDone == 1 ? true : false;
         this.personId = personId;
 
@@ -36,7 +37,7 @@ public class Task implements Parcelable{
         taskName = in.readString();
         points = in.readInt();
         pointsForTransfert = in.readInt();
-        taskDate = (Date)in.readSerializable();
+        taskDate = (LocalDate) in.readSerializable();
         isDone = in.readByte() != 0;
         personId = in.readInt();
     }

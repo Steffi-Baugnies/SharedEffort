@@ -149,6 +149,25 @@ def getTasksFromPerson():
 	cursor.close()
 	
 	return jsonify({'personTasks' : personTasks})
+	
+@app.route('/board/addTask', methods=["POST"])
+def addTask():
+	jsonData = request.json
+	pswd = jsonData["pswd"]
+	taskName = jsonData["taskName"]
+	points = jsonData["points"]
+	pointsForTransfer = ["pointsForTransfer"]
+	taskDate = jsonData["taskDate"]
+	persId = jsonData["persId"]
+	cursor = mysql.connection.cursor()
+	message = ""
+	cursor.callproc('proc_addTask', [pswd, taskName, points, pointsForTransfer, taskDate, persId])
+	
+	for fields in cursor:
+		message = fields[0]
+	mysql.connection.commit()
+	cursor.close()
+	return jsonify({'message' : message})
 
 if __name__ == '__main__':
 	app.run(debug=True, threaded=True)

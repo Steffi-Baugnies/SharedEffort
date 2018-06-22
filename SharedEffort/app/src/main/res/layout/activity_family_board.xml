@@ -12,15 +12,6 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"/>
 
-    <LinearLayout
-        app:layout_constraintTop_toBottomOf="@id/activity_familyBoard_table"
-        android:id="@+id/activity_familyBoard_debug"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </LinearLayout>
-
-
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/activity_familyBoard_table"
         android:layout_width="match_parent"
@@ -36,13 +27,23 @@
                 android:padding="3dip"
                 android:text="Lundi"
                 android:textSize="20dp"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/activity_familyBoard_monday_tasks"
+                >
 
-            <TextView
-                android:padding="3dip"
-                android:layout_width="240dp"
-                android:text="test" />
+            </LinearLayout>
+
+
         </TableRow>
-
+        <TableRow>
+            <TextView
+                android:id="@+id/activity_familyBoard_monday"
+                android:padding="3dip"
+                android:layout_column="1"
+                android:textSize="10dp"
+                />
+        </TableRow>
         <TableRow>
 
             <TextView
@@ -51,11 +52,22 @@
                 android:text="Mardi"
                 android:textSize="20dp"/>
 
-            <TextView
-                android:padding="3dip"
-                android:text="test" />
-        </TableRow>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/activity_familyBoard_tuesday_tasks"
+                >
 
+            </LinearLayout>
+
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/activity_familyBoard_tuesday"
+                android:padding="3dip"
+                android:layout_column="1"
+                android:textSize="10dp"
+            />
+        </TableRow>
         <TableRow>
 
             <TextView
@@ -64,11 +76,21 @@
                 android:text="Mercredi"
                 android:textSize="20dp"/>
 
-            <TextView
-                android:padding="3dip"
-                android:text="test"/>
-        </TableRow>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/activity_familyBoard_wednesday_tasks"
+                >
 
+            </LinearLayout>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/activity_familyBoard_wednesday"
+                android:padding="3dip"
+                android:layout_column="1"
+                android:textSize="10dp"
+            />
+        </TableRow>
         <TableRow>
 
             <TextView
@@ -77,9 +99,21 @@
                 android:text="Jeudi"
                 android:textSize="20dp"/>
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/activity_familyBoard_thursday_tasks"
+                >
+
+            </LinearLayout>
+
+        </TableRow>
+        <TableRow>
             <TextView
+                android:id="@+id/activity_familyBoard_thursday"
                 android:padding="3dip"
-                android:text="test" />
+                android:layout_column="1"
+                android:textSize="10dp"
+            />
         </TableRow>
         <TableRow>
 
@@ -89,9 +123,21 @@
                 android:text="Vendredi"
                 android:textSize="20dp"/>
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/activity_familyBoard_friday_tasks"
+                >
+
+            </LinearLayout>
+
+        </TableRow>
+        <TableRow>
             <TextView
+                android:id="@+id/activity_familyBoard_friday"
                 android:padding="3dip"
-                android:text="test" />
+                android:layout_column="1"
+                android:textSize="10dp"
+            />
         </TableRow>
         <TableRow>
 
@@ -101,9 +147,21 @@
                 android:text="Samedi"
                 android:textSize="20dp"/>
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/activity_familyBoard_saturday_tasks"
+                >
+
+            </LinearLayout>
+
+        </TableRow>
+        <TableRow>
             <TextView
+                android:id="@+id/activity_familyBoard_saturday"
                 android:padding="3dip"
-                android:text="test" />
+                android:layout_column="1"
+                android:textSize="10dp"
+            />
         </TableRow>
         <TableRow>
 
@@ -113,11 +171,42 @@
                 android:text="Dimanche"
                 android:textSize="20dp"/>
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/activity_familyBoard_sunday_tasks"
+                >
+
+            </LinearLayout>
+        </TableRow>
+        <TableRow>
             <TextView
+                android:id="@+id/activity_familyBoard_sunday"
                 android:padding="3dip"
-                android:text="test" />
+                android:layout_column="1"
+                android:textSize="10dp"
+            />
         </TableRow>
     </TableLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/activity_familyBoard_table"
+        >
+
+        <Button
+            android:id="@+id/activity_familyBoard_previous_week_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Semaine précédente"
+            />
+        <Button
+            android:id="@+id/activity_familyBoard_next_week_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Semaine prochaine"
+            />
+
+    </LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>

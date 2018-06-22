@@ -19,16 +19,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class FamilyBoardActivity extends AppCompatActivity {
 
     private Spinner mUserSpinner;
 
+    private Button previousWeekBtn;
+
+    private Button nextWeekBtn;
+
     private List<Task> taskList;
 
-    private LinearLayout linearLayout;
+    private Map<String, LocalDate> currentWeek;
+
+    private DateHandler dateHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +49,48 @@ public class FamilyBoardActivity extends AppCompatActivity {
             Toaster toaster = new Toaster(previousMessage, FamilyBoardActivity.this);
             toaster.showToast();
         }
+
+        dateHandler = new DateHandler();
+        currentWeek = dateHandler.getWeekDates();
+        fillDates();
         getFamilyInfo();
 
-        linearLayout = findViewById(R.id.activity_familyBoard_debug);
-        DateHandler week = new DateHandler();
-        week.getWeekDates();
+        previousWeekBtn = findViewById(R.id.activity_familyBoard_previous_week_btn);
+        nextWeekBtn = findViewById(R.id.activity_familyBoard_next_week_btn);
 
+        previousWeekBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToPreviousWeek();
+            }
+        });
+
+        nextWeekBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToNextWeek();
+            }
+        });
+
+
+    }
+
+    public void fillDates(){
+        String[] keys = dateHandler.getDayNames();
+        int[] dateViewIds = new int[] {
+                R.id.activity_familyBoard_monday,
+                R.id.activity_familyBoard_tuesday,
+                R.id.activity_familyBoard_wednesday,
+                R.id.activity_familyBoard_thursday,
+                R.id.activity_familyBoard_friday,
+                R.id.activity_familyBoard_saturday,
+                R.id.activity_familyBoard_sunday
+        };
+        for(int i = 0; i < keys.length; i++){
+            TextView textView = findViewById(dateViewIds[i]);
+            String localDate = currentWeek.get(keys[i]).format(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.FRENCH));
+            textView.setText(localDate);
+        }
     }
 
     public void createSpinner(List<String> familyMembersName){
@@ -107,7 +153,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
                     FamilyBoardActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            createClickableTasks(taskList);
+                            createClickableTasks();
                         }
                     });
 
@@ -119,23 +165,39 @@ public class FamilyBoardActivity extends AppCompatActivity {
 
     }
 
-    public void createClickableTasks(final List<Task> tasks){
-        linearLayout.removeAllViews();
-        for(int i = 0; i < tasks.size(); i++){
-            Button btn = new Button(this);
-            final Task task = tasks.get(i);
-            btn.setText(task.taskName);
+    public void createClickableTasks(){
+        int[] taskLayoutIds = new int[] {
+                R.id.activity_familyBoard_monday_tasks,
+                R.id.activity_familyBoard_tuesday_tasks,
+                R.id.activity_familyBoard_wednesday_tasks,
+                R.id.activity_familyBoard_thursday_tasks,
+                R.id.activity_familyBoard_friday_tasks,
+                R.id.activity_familyBoard_saturday_tasks,
+                R.id.activity_familyBoard_sunday_tasks
+        };
 
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent taskDetailActivity = new Intent(FamilyBoardActivity.this, TaskDetailActivity.class);
-                    taskDetailActivity.putExtra("task", task);
-                    startActivity(taskDetailActivity);
-                }
-            });
-            linearLayout.addView(btn);
+        for(int i = 0; i < taskLayoutIds.length; i++){
+            LinearLayout layout = findViewById(taskLayoutIds[i]);
+            layout.removeAllViews();
+        }
 
+        for(int i = 0; i < taskList.size(); i++){
+            final Task task = taskList.get(i);
+            if(currentWeek.containsValue(task.taskDate)){
+                LinearLayout layout = findViewById(taskLayoutIds[task.taskDate.getDayOfWeek().getValue()-1]);
+                Button btn = new Button(this);
+                btn.setText(task.taskName);
+
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent taskDetailActivity = new Intent(FamilyBoardActivity.this, TaskDetailActivity.class);
+                        taskDetailActivity.putExtra("task", task);
+                        startActivity(taskDetailActivity);
+                    }
+                });
+                layout.addView(btn);
+            }
         }
     }
 
@@ -175,4 +237,16 @@ public class FamilyBoardActivity extends AppCompatActivity {
         };
         new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/familyInfo", familyId, eventNotifier)).start();
     }
+
+    public void goToNextWeek(){
+        currentWeek = dateHandler.getNextWeek(currentWeek);
+        fillDates();
+        createClickableTasks();
+    }
+    public void goToPreviousWeek(){
+        currentWeek = dateHandler.getPreviousWeek(currentWeek);
+        fillDates();
+        createClickableTasks();
+    }
+
 }
