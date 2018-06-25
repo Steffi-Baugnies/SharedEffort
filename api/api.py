@@ -141,9 +141,10 @@ def getTasksFromPerson():
 			'nomTache' : task[1],
 			'nbPointsTache' : task[2],
 			'nbPointsTransfert' : task[3],
-			'dateTache' : task[4],
-			'estFaite' : task[5],
-			'idPersonne' : task[6]
+			'estRecurente' : task[4],
+			'idPersonne' : task[5],
+			'dateTache' : task[6],
+			'estFaite' : task[7]
 		}
 		personTasks.append(task)
 	cursor.close()
@@ -155,18 +156,19 @@ def addTask():
 	jsonData = request.json
 	pswd = jsonData["pswd"]
 	taskName = jsonData["taskName"]
-	points = jsonData["points"]
-	pointsForTransfer = ["pointsForTransfer"]
+	points = int(jsonData["points"])
+	pointsForTransfer = int(jsonData["pointsForTransfer"])
 	taskDate = jsonData["taskDate"]
 	persId = jsonData["persId"]
+	recurrent = jsonData["recurrent"]
 	cursor = mysql.connection.cursor()
 	message = ""
-	cursor.callproc('proc_addTask', [pswd, taskName, points, pointsForTransfer, taskDate, persId])
+	cursor.callproc('proc_addTask', [pswd, taskName, points, pointsForTransfer, taskDate, persId, recurrent])
 	
 	for fields in cursor:
-		message = fields[0]
-	mysql.connection.commit()
+		message = fields[0].decode('utf-8')
 	cursor.close()
+	mysql.connection.commit()
 	return jsonify({'message' : message})
 
 if __name__ == '__main__':

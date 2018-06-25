@@ -4,6 +4,118 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddTaskActivity">
+    tools:context=".AddTaskActivity"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/activity_addTask_taskName_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nom de la tâche"/>
+
+    <EditText
+        android:id="@+id/activity_addTask_taskName"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_taskName_text"
+        />
+
+    <TextView
+        android:id="@+id/activity_addTask_points_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre de points que vaut la tâche"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_taskName"
+        />
+
+    <EditText
+        android:id="@+id/activity_addTask_points"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberSigned"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_points_text"
+        />
+
+    <TextView
+        android:id="@+id/activity_addTask_pointsForTransfer_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberSigned"
+        android:text="Nombre de points nécessaires pour le transfert"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_points"/>
+
+    <EditText
+        android:id="@+id/activity_addTask_pointsForTransfer"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_pointsForTransfer_text"
+        />
+
+    <TextView
+        android:id="@+id/activity_addTask_taskDate_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date et heure de la tâche"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_pointsForTransfer"/>
+
+    <DatePicker
+        android:id="@+id/activity_addTask_datePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="99dp"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_pointsForTransfer"/>
+
+    <TimePicker
+        android:id="@+id/activity_addTask_timePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:timePickerMode="spinner"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_datePicker"/>
+    <TextView
+        android:id="@+id/activity_addTask_person_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Personne concernée"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_timePicker"
+        />
+
+    <Spinner
+        android:id="@+id/activity_addTask_userSpinner"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_timePicker"
+        android:layout_margin="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/activity_addTask_LinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_userSpinner"
+        >
+        <TextView
+            android:id="@+id/activity_addTask_recurrence_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="La tâche est-elle récurente ?"
+            />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/activity_addTask_recurrence"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/activity_addTask_recurrence_text"
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/activity_addTask_validateBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Valider"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_LinearLayout"/>
+
 
 </android.support.constraint.ConstraintLayout>

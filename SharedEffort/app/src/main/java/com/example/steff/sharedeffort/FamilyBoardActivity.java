@@ -34,6 +34,8 @@ public class FamilyBoardActivity extends AppCompatActivity {
 
     private Button nextWeekBtn;
 
+    private Button addTaskBtn;
+
     private List<Task> taskList;
 
     private Map<String, LocalDate> currentWeek;
@@ -57,6 +59,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
 
         previousWeekBtn = findViewById(R.id.activity_familyBoard_previous_week_btn);
         nextWeekBtn = findViewById(R.id.activity_familyBoard_next_week_btn);
+        addTaskBtn = findViewById(R.id.activity_familyBoard_addTask_btn);
 
         previousWeekBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +72,13 @@ public class FamilyBoardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToNextWeek();
+            }
+        });
+
+        addTaskBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTask();
             }
         });
 
@@ -247,6 +257,11 @@ public class FamilyBoardActivity extends AppCompatActivity {
         currentWeek = dateHandler.getPreviousWeek(currentWeek);
         fillDates();
         createClickableTasks();
+    }
+
+    public void addTask(){
+        Intent addTaskActivity = new Intent(FamilyBoardActivity.this, AddTaskActivity.class);
+        startActivity(addTaskActivity);
     }
 
 }
