@@ -1,9 +1,12 @@
 package com.example.steff.sharedeffort;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.util.JsonReader;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,7 +38,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
     private Button mValidateBtn;
 
-    private String mAdminPswd = "password";
+    private String mAdminPswd = "";
 
     private Map<String, Integer> userInfo;
 
@@ -52,7 +55,6 @@ public class AddTaskActivity extends AppCompatActivity {
         mUserSpinner = findViewById(R.id.activity_addTask_userSpinner);
         mRecurrence = findViewById(R.id.activity_addTask_recurrence);
         mValidateBtn = findViewById(R.id.activity_addTask_validateBtn);
-
         getFamilyInfo();
         setTimePickerMode();
         initValidateBtn();
@@ -100,10 +102,35 @@ public class AddTaskActivity extends AppCompatActivity {
         mValidateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addTask();
+                openAdminPasswordPopup();
             }
         });
     }
+
+    public void openAdminPasswordPopup(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_admin_password, null);
+        builder.setView(dialogView).setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText editText = dialogView.findViewById(R.id.dialog_admin_password_input);
+                System.out.println(editText.getText().toString());
+                mAdminPswd = editText.getText().toString();
+
+                addTask();
+
+            }
+        }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
     public void getFamilyInfo(){
         JSONObject familyId = new JSONObject();
         try {

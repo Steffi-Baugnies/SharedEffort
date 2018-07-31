@@ -24,7 +24,7 @@ public class Task implements Parcelable{
         this.points = points;
         this.pointsForTransfert = pointsForTransfert;
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy hh:mm:ss z");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z");
         this.taskDate = LocalDate.parse(taskDate, dateTimeFormatter);
 
         this.isDone = isDone == 1 ? true : false;

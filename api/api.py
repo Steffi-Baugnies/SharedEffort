@@ -169,6 +169,7 @@ def addTask():
 		message = fields[0].decode('utf-8')
 	cursor.close()
 	mysql.connection.commit()
+	print(message)
 	return jsonify({'message' : message})
 
 if __name__ == '__main__':
