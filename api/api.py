@@ -63,23 +63,24 @@ def register():
 	lName = jsonData["lName"]
 	fName = jsonData["fName"]
 	birthdate = jsonData["birthdate"]
-	cursor = mysql.connection.cursor()
 	rowCount = 0
 	state = 0
 	response = ''
 	try:
+		cursor = mysql.connection.cursor()
 		cursor.callproc('proc_createUser', [mailAddress, password, lName, fName, birthdate])
 		for fields in cursor:
 			rowCount = fields[0]
-		mysql.connection.commit()
 		if rowCount > 0:
 			response = 'Le compte a bien été créé'
 			state = 1
 		else: 
 			response = 'Erreur interne, veuillez réessayer plus tard'
+		cursor.close()
+		mysql.connection.commit()
 	except my.Error as e:
 		response = "L'adresse e-mail entrée est déjà utilisée"
-	cursor.close()
+		print(e)
 	
 	print(response)
 	return jsonify({'registrationStatus': state, 'message' : response})

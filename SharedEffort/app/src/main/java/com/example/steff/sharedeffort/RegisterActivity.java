@@ -55,72 +55,81 @@ public class RegisterActivity extends AppCompatActivity {
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String mailAddress = mNewUserMailAddress.getText().toString();
-                String password = mNewUserPassword.getText().toString();
-                String passwordConfirmation = mNewUserPasswordConfirmation.getText().toString();
                 String lastName = mNewUserLName.getText().toString();
                 String firstName = mNewUserFName.getText().toString();
-                String birthdate = mDatePicker.getYear() + "-" + (mDatePicker.getMonth() + 1) + "-" + mDatePicker.getDayOfMonth();
+                String mailAddress = mNewUserMailAddress.getText().toString();
+                if(lastName.length() > 0 && firstName.length() > 0 && mailAddress.length() > 0){
+                    String password = mNewUserPassword.getText().toString();
+                    String passwordConfirmation = mNewUserPasswordConfirmation.getText().toString();
 
-                if(password.length() > 7){
-                    if(password.equals(passwordConfirmation)){
-                        JSONObject jsonObject = new JSONObject();
-                        try {
-                            jsonObject.put("mailAddress", mailAddress);
-                            jsonObject.put("password", password);
-                            jsonObject.put("lName", lastName);
-                            jsonObject.put("fName", firstName);
-                            jsonObject.put("birthdate", birthdate);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        IEventNotifier eventNotifier = new IEventNotifier() {
-                            @Override
-                            public void RequestComplete(JSONObject jsonObject) {
-                                int state = 0;
-                                try {
-                                    state = (int) jsonObject.get("registrationStatus");
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                String message = null;
-                                try {
-                                    message = jsonObject.get("message").toString();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                if(state == 1){
-                                    PreviousToast.getInstance().setMessage(message);
-                                    Intent loginActivity = new Intent(RegisterActivity.this, LoginActivity.class);
-                                    startActivity(loginActivity);
-                                }
-                                else{
+                    String birthdate = mDatePicker.getYear() + "-" + (mDatePicker.getMonth() + 1) + "-" + mDatePicker.getDayOfMonth();
 
-                                    final String finalMessage = message;
-                                    RegisterActivity.this.runOnUiThread(new Runnable() {
-                                        public void run() {
-                                            Toaster toaster = new Toaster(finalMessage, RegisterActivity.this);
-                                            toaster.showToast();
-                                        }
-                                    });
-                                }
+                    if(password.length() > 7){
+                        if(password.equals(passwordConfirmation)){
+                            JSONObject jsonObject = new JSONObject();
+                            try {
+                                jsonObject.put("mailAddress", mailAddress);
+                                jsonObject.put("password", password);
+                                jsonObject.put("lName", lastName);
+                                jsonObject.put("fName", firstName);
+                                jsonObject.put("birthdate", birthdate);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        };
-                        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "register", jsonObject, eventNotifier)).start();
+                            IEventNotifier eventNotifier = new IEventNotifier() {
+                                @Override
+                                public void RequestComplete(JSONObject jsonObject) {
+                                    int state = 0;
+                                    try {
+                                        state = (int) jsonObject.get("registrationStatus");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String message = null;
+                                    try {
+                                        message = jsonObject.get("message").toString();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if(state == 1){
+                                        PreviousToast.getInstance().setMessage(message);
+                                        Intent loginActivity = new Intent(RegisterActivity.this, LoginActivity.class);
+                                        startActivity(loginActivity);
+                                    }
+                                    else{
+
+                                        final String finalMessage = message;
+                                        RegisterActivity.this.runOnUiThread(new Runnable() {
+                                            public void run() {
+                                                Toaster toaster = new Toaster(finalMessage, RegisterActivity.this);
+                                                toaster.showToast();
+                                            }
+                                        });
+                                    }
+                                }
+                            };
+                            new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "register", jsonObject, eventNotifier)).start();
+                        }
+                        else {
+
+                            String message = "Les mots de passe ne correspondent pas, veuillez réessayer";
+                            Toaster toaster = new Toaster(message, RegisterActivity.this);
+                            toaster.showToast();
+                        }
+
                     }
                     else {
-
-                        String message = "Les mots de passe ne correspondent pas, veuillez réessayer";
-                        Toaster toaster = new Toaster(message, RegisterActivity.this);
-                        toaster.showToast();
+                        String message = "Le mot de passe entré est trop court. Veuillez choisir un mot de passe d'au moins 8 caractères";
+                        Toaster toasterPswd = new Toaster(message, RegisterActivity.this);
+                        toasterPswd.showToast();
                     }
+                }
+                else{
+                    String message = "Les champs 'prénom', 'nom, et 'adresse email' sont requis";
+                    Toaster toaster = new Toaster(message, RegisterActivity.this);
+                    toaster.showToast();
+                }
 
-                }
-                else {
-                    String message = "Le mot de passe entré est trop court. Veuillez choisir un mot de passe d'au moins 8 caractères";
-                    Toaster toasterPswd = new Toaster(message, RegisterActivity.this);
-                    toasterPswd.showToast();
-                }
             }
         });
 
