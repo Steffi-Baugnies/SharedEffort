@@ -68,6 +68,7 @@ public class AddTaskActivity extends AppCompatActivity {
         JSONObject task = new JSONObject();
         String taskDate = mDatePicker.getYear() + "-" + (mDatePicker.getMonth() + 1) + "-" + mDatePicker.getDayOfMonth() + " " + mTimePicker.getHour() + ":" + mTimePicker.getMinute();
         try {
+            task.put("connectedUser", ConnectedUserInfo.getInstance().getConnectedUser());
             task.put("pswd", mAdminPswd);
             task.put("taskName", mTaskName.getText());
             task.put("points", mPoints.getText());
@@ -75,6 +76,7 @@ public class AddTaskActivity extends AppCompatActivity {
             task.put("taskDate", taskDate);
             task.put("persId", userInfo.get(mUserSpinner.getSelectedItem()));
             task.put("recurrent", mRecurrence.isChecked());
+            task.put("famId", ConnectedUserInfo.getInstance().getFamilyId());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -150,6 +152,8 @@ public class AddTaskActivity extends AppCompatActivity {
                 }
                 userInfo = new HashMap<>();
                 final List<String> familyMemberNames = new ArrayList<>();
+                familyMemberNames.add("Libre");
+                userInfo.put("Libre", -1);
                 for(int i = 0; i < familyMembers.length(); i++){
                     try {
                         JSONObject familyMember = (JSONObject) familyMembers.get(i);

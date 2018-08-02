@@ -111,7 +111,13 @@ public class FamilyBoardActivity extends AppCompatActivity {
         mUserSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                getPersonTasks();
+                System.out.println(position);
+                if(position == 0){
+                    getAllTasks();
+                }
+                else{
+                    getPersonTasks();
+                }
             }
 
             @Override
@@ -120,6 +126,57 @@ public class FamilyBoardActivity extends AppCompatActivity {
             }
         });
         getPersonTasks();
+    }
+
+    public void getAllTasks(){
+        JSONObject tasksRequest = new JSONObject();
+        try {
+            tasksRequest.put("familyId", ConnectedUserInfo.getInstance().getFamilyId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        IEventNotifier eventNotifier = new IEventNotifier() {
+            @Override
+            public void RequestComplete(JSONObject jsonObject) {
+                JSONArray tasks = null;
+                try {
+                    tasks = jsonObject.getJSONArray("tasks");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(tasks != null){
+                    taskList = new ArrayList<>();
+                    for(int i = 0 ; i < tasks.length(); i++){
+                        try {
+                            JSONObject taskObject = (JSONObject) tasks.get(i);
+                            Task task = new Task(
+                                    taskObject.getInt("id"),
+                                    taskObject.getString("nomTache"),
+                                    taskObject.getInt("nbPointsTache"),
+                                    taskObject.getInt("nbPointsTransfert"),
+                                    taskObject.getString("dateTache"),
+                                    taskObject.getInt("estFaite"),
+                                    taskObject.getInt("idPersonne")
+                            );
+                            taskList.add(task);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    FamilyBoardActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            createClickableTasks();
+                        }
+                    });
+
+                }
+
+            }
+        };
+        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/allTasks", tasksRequest, eventNotifier)).start();
+
     }
 
     public void getPersonTasks(){
@@ -229,6 +286,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 final List<String> familyMemberNames = new ArrayList<>();
+                familyMemberNames.add("Voir tout");
                 for(int i = 0; i < familyMembers.length(); i++){
                     try {
                         JSONObject familyMember = (JSONObject) familyMembers.get(i); 

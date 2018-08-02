@@ -137,34 +137,65 @@ def getTasksFromPerson():
 	personTasks = []
 	cursor.callproc('proc_getTasksFromPerson', [familyId, fName])
 	for task in cursor:
+		idP = task[5]
+		if idP is None :
+			idP = -1
 		task = {
 			'id' : task[0], 
 			'nomTache' : task[1],
 			'nbPointsTache' : task[2],
 			'nbPointsTransfert' : task[3],
 			'estRecurente' : task[4],
-			'idPersonne' : task[5],
+			'idPersonne' : idP,
 			'dateTache' : task[6],
 			'estFaite' : task[7]
 		}
 		personTasks.append(task)
 	cursor.close()
-	
 	return jsonify({'personTasks' : personTasks})
+
+@app.route('/board/allTasks', methods=["POST"])
+def getTasksFromFamily():
+	jsonData = request.json
+	famId = jsonData["familyId"]
+	cursor = mysql.connection.cursor()
+	tasks = []
+	cursor.callproc('proc_getTasksFromFamily', [famId])
+	for task in cursor:
+		idP = task[5]
+		if idP is None :
+			idP = -1
+		task = {
+			'id' : task[0], 
+			'nomTache' : task[1],
+			'nbPointsTache' : task[2],
+			'nbPointsTransfert' : task[3],
+			'estRecurente' : task[4],
+			'idPersonne' : idP,
+			'dateTache' : task[6],
+			'estFaite' : task[7]
+		}
+		tasks.append(task)
+	cursor.close()
+	return jsonify({'tasks' : tasks})
 	
 @app.route('/board/addTask', methods=["POST"])
 def addTask():
 	jsonData = request.json
+	connectedUser = jsonData["connectedUser"]
 	pswd = jsonData["pswd"]
 	taskName = jsonData["taskName"]
 	points = int(jsonData["points"])
 	pointsForTransfer = int(jsonData["pointsForTransfer"])
 	taskDate = jsonData["taskDate"]
 	persId = jsonData["persId"]
+	famId = jsonData["famId"]
+	if persId == -1 :
+		persId = None
 	recurrent = jsonData["recurrent"]
 	cursor = mysql.connection.cursor()
 	message = ""
-	cursor.callproc('proc_addTask', [pswd, taskName, points, pointsForTransfer, taskDate, persId, recurrent])
+	cursor.callproc('proc_addTask', [connectedUser, pswd, taskName, points, pointsForTransfer, taskDate, persId, recurrent, famId])
 	
 	for fields in cursor:
 		message = fields[0].decode('utf-8')
