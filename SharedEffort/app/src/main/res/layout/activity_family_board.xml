@@ -29,7 +29,7 @@
                 android:textSize="20dp"/>
             <LinearLayout
                 android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_monday_tasks"
+                android:id="@+id/activity_familyBoard_monday"
                 >
 
             </LinearLayout>
@@ -38,7 +38,7 @@
         </TableRow>
         <TableRow>
             <TextView
-                android:id="@+id/activity_familyBoard_monday"
+                android:id="@+id/activity_familyBoard_monday_text"
                 android:padding="3dip"
                 android:layout_column="1"
                 android:textSize="10dp"
@@ -54,7 +54,7 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_tuesday_tasks"
+                android:id="@+id/activity_familyBoard_tuesday"
                 >
 
             </LinearLayout>
@@ -62,7 +62,7 @@
         </TableRow>
         <TableRow>
             <TextView
-                android:id="@+id/activity_familyBoard_tuesday"
+                android:id="@+id/activity_familyBoard_tuesday_text"
                 android:padding="3dip"
                 android:layout_column="1"
                 android:textSize="10dp"
@@ -78,14 +78,14 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_wednesday_tasks"
+                android:id="@+id/activity_familyBoard_wednesday"
                 >
 
             </LinearLayout>
         </TableRow>
         <TableRow>
             <TextView
-                android:id="@+id/activity_familyBoard_wednesday"
+                android:id="@+id/activity_familyBoard_wednesday_text"
                 android:padding="3dip"
                 android:layout_column="1"
                 android:textSize="10dp"
@@ -101,7 +101,7 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_thursday_tasks"
+                android:id="@+id/activity_familyBoard_thursday"
                 >
 
             </LinearLayout>
@@ -109,7 +109,7 @@
         </TableRow>
         <TableRow>
             <TextView
-                android:id="@+id/activity_familyBoard_thursday"
+                android:id="@+id/activity_familyBoard_thursday_text"
                 android:padding="3dip"
                 android:layout_column="1"
                 android:textSize="10dp"
@@ -125,7 +125,7 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_friday_tasks"
+                android:id="@+id/activity_familyBoard_friday"
                 >
 
             </LinearLayout>
@@ -133,7 +133,7 @@
         </TableRow>
         <TableRow>
             <TextView
-                android:id="@+id/activity_familyBoard_friday"
+                android:id="@+id/activity_familyBoard_friday_text"
                 android:padding="3dip"
                 android:layout_column="1"
                 android:textSize="10dp"
@@ -149,7 +149,7 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_saturday_tasks"
+                android:id="@+id/activity_familyBoard_saturday"
                 >
 
             </LinearLayout>
@@ -157,7 +157,7 @@
         </TableRow>
         <TableRow>
             <TextView
-                android:id="@+id/activity_familyBoard_saturday"
+                android:id="@+id/activity_familyBoard_saturday_text"
                 android:padding="3dip"
                 android:layout_column="1"
                 android:textSize="10dp"
@@ -173,14 +173,14 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_sunday_tasks"
+                android:id="@+id/activity_familyBoard_sunday"
                 >
 
             </LinearLayout>
         </TableRow>
         <TableRow>
             <TextView
-                android:id="@+id/activity_familyBoard_sunday"
+                android:id="@+id/activity_familyBoard_sunday_text"
                 android:padding="3dip"
                 android:layout_column="1"
                 android:textSize="10dp"
@@ -220,6 +220,12 @@
             android:text="Ajouter une tâche"
 
             />
+        <Button
+            android:id="@+id/activity_familyBoard_addEvent_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:text="Ajouter un événement"/>
     </LinearLayout>
 
 

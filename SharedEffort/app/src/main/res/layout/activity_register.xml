@@ -1,69 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="wrap_content"
+<android.support.constraint.ConstraintLayout android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditText
-        android:id="@+id/activity_register_fName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Prénom"
-        />
-    <EditText
-        android:id="@+id/activity_register_lName"
-        android:layout_marginTop="40dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Nom"/>
+
     <EditText
         android:id="@+id/activity_register_mailAddress"
-        android:layout_marginTop="80dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Adresse mail"
         android:inputType="textEmailAddress"
         />
-
-    <!--Kept for now but to be replaced by dropdowns-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-        android:textSize="18dp"
-        android:inputType="datetime"
-        android:hint="Date de naissance"
-        android:focusable="false"
-        />
-
-    <DatePicker
-        android:id="@+id/activity_register_birthdate"
-        android:layout_width="wrap_content"
-        android:layout_height="99dp"
-        android:layout_marginTop="155dp"
-        android:layout_centerHorizontal="true"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner" />
     <EditText
         android:id="@+id/activity_register_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="225dp"
         android:inputType="textPassword"
-        android:hint="Mot de passe (min. 8 caractères)"/>
+        android:hint="Mot de passe (min. 8 caractères)"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_mailAddress"/>
     <EditText
         android:id="@+id/activity_register_passwordConfirmation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="265dp"
         android:inputType="textPassword"
-        android:hint="Confirmation du mot de passe"/>
+        android:hint="Confirmation du mot de passe"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_password"/>
+
+    <EditText
+        android:id="@+id/activity_register_familyName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Nom de la famille"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_passwordConfirmation"/>
     <Button
         android:id="@+id/activity_register_register_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Créer un compte"
-        android:layout_marginTop="300dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_familyName"/>
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

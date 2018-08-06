@@ -25,7 +25,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         mTaskName.setText(task.taskName);
         mPoints.setText("" + task.points);
-        mPointsForTransfer.setText("" + task.pointsForTransfert);
+        mPointsForTransfer.setText("" + task.pointsForTransfer);
         mDate.setText(task.taskDate.toString());
     }
 }

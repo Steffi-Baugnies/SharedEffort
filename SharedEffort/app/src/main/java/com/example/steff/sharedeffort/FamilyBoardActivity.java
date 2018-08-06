@@ -36,7 +36,11 @@ public class FamilyBoardActivity extends AppCompatActivity {
 
     private Button addTaskBtn;
 
+    private Button addEventBtn;
+
     private List<Task> taskList;
+
+    private List<Event> eventList;
 
     private Map<String, LocalDate> currentWeek;
 
@@ -60,6 +64,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         previousWeekBtn = findViewById(R.id.activity_familyBoard_previous_week_btn);
         nextWeekBtn = findViewById(R.id.activity_familyBoard_next_week_btn);
         addTaskBtn = findViewById(R.id.activity_familyBoard_addTask_btn);
+        addEventBtn = findViewById(R.id.activity_familyBoard_addEvent_btn);
 
         previousWeekBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,19 +87,34 @@ public class FamilyBoardActivity extends AppCompatActivity {
             }
         });
 
-
+        addEventBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addEvent();
+            }
+        });
     }
 
+    public void onRestart() {
+        super.onRestart();
+        String previousMessage = PreviousToast.getInstance().getMessage();
+        if(previousMessage != null){
+            Toaster toaster = new Toaster(previousMessage, FamilyBoardActivity.this);
+            toaster.showToast();
+        }
+        getFamilyInfo();
+        fillDates();
+    }
     public void fillDates(){
         String[] keys = dateHandler.getDayNames();
         int[] dateViewIds = new int[] {
-                R.id.activity_familyBoard_monday,
-                R.id.activity_familyBoard_tuesday,
-                R.id.activity_familyBoard_wednesday,
-                R.id.activity_familyBoard_thursday,
-                R.id.activity_familyBoard_friday,
-                R.id.activity_familyBoard_saturday,
-                R.id.activity_familyBoard_sunday
+                R.id.activity_familyBoard_monday_text,
+                R.id.activity_familyBoard_tuesday_text,
+                R.id.activity_familyBoard_wednesday_text,
+                R.id.activity_familyBoard_thursday_text,
+                R.id.activity_familyBoard_friday_text,
+                R.id.activity_familyBoard_saturday_text,
+                R.id.activity_familyBoard_sunday_text
         };
         for(int i = 0; i < keys.length; i++){
             TextView textView = findViewById(dateViewIds[i]);
@@ -156,7 +176,8 @@ public class FamilyBoardActivity extends AppCompatActivity {
                                     taskObject.getInt("nbPointsTransfert"),
                                     taskObject.getString("dateTache"),
                                     taskObject.getInt("estFaite"),
-                                    taskObject.getInt("idPersonne")
+                                    taskObject.getInt("idPersonne"),
+                                    taskObject.getInt("estRecurrente")
                             );
                             taskList.add(task);
                         } catch (JSONException e) {
@@ -167,7 +188,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
                     FamilyBoardActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            createClickableTasks();
+                            getAllEvents();
                         }
                     });
 
@@ -176,7 +197,55 @@ public class FamilyBoardActivity extends AppCompatActivity {
             }
         };
         new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/allTasks", tasksRequest, eventNotifier)).start();
+    }
 
+    public void getAllEvents(){
+        JSONObject tasksRequest = new JSONObject();
+        try {
+            tasksRequest.put("familyId", ConnectedUserInfo.getInstance().getFamilyId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        IEventNotifier eventNotifier = new IEventNotifier() {
+            @Override
+            public void RequestComplete(JSONObject jsonObject) {
+                JSONArray events = null;
+                try {
+                    events = jsonObject.getJSONArray("events");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(events != null){
+                    eventList = new ArrayList<>();
+                    for(int i = 0 ; i < events.length(); i++){
+                        try {
+                            JSONObject eventObject = (JSONObject) events.get(i);
+                            Event event = new Event(
+                                    eventObject.getInt("id"),
+                                    eventObject.getString("nomEvenement"),
+                                    eventObject.getString("descriptionEvenement"),
+                                    eventObject.getInt("idPersonne"),
+                                    eventObject.getInt("estRecurrent"),
+                                    eventObject.getString("dateEvenement")
+                            );
+                            eventList.add(event);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    FamilyBoardActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            createClickableAffairs();
+                        }
+                    });
+
+                }
+
+            }
+        };
+        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/allEvents", tasksRequest, eventNotifier)).start();
     }
 
     public void getPersonTasks(){
@@ -209,7 +278,8 @@ public class FamilyBoardActivity extends AppCompatActivity {
                                     taskObject.getInt("nbPointsTransfert"),
                                     taskObject.getString("dateTache"),
                                     taskObject.getInt("estFaite"),
-                                    taskObject.getInt("idPersonne")
+                                    taskObject.getInt("idPersonne"),
+                                    taskObject.getInt("estRecurrente")
                             );
                             taskList.add(task);
                         } catch (JSONException e) {
@@ -220,7 +290,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
                     FamilyBoardActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            createClickableTasks();
+                            getPersonEvents();
                         }
                     });
 
@@ -232,15 +302,66 @@ public class FamilyBoardActivity extends AppCompatActivity {
 
     }
 
-    public void createClickableTasks(){
+    public void getPersonEvents() {
+
+        JSONObject eventsRequest = new JSONObject();
+        try {
+            eventsRequest.put("familyId", ConnectedUserInfo.getInstance().getFamilyId());
+            eventsRequest.put("fName", mUserSpinner.getSelectedItem());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        IEventNotifier eventNotifier = new IEventNotifier() {
+            @Override
+            public void RequestComplete(JSONObject jsonObject) {
+                JSONArray events = null;
+                try {
+                    events = jsonObject.getJSONArray("personEvents");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (events != null) {
+                    eventList = new ArrayList<>();
+                    for (int i = 0; i < events.length(); i++) {
+                        try {
+                            JSONObject eventObject = (JSONObject) events.get(i);
+                            Event event = new Event(
+                                    eventObject.getInt("id"),
+                                    eventObject.getString("nomEvenement"),
+                                    eventObject.getString("descriptionEvenement"),
+                                    eventObject.getInt("idPersonne"),
+                                    eventObject.getInt("estRecurrent"),
+                                    eventObject.getString("dateEvenement")
+                            );
+                            eventList.add(event);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    FamilyBoardActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            createClickableAffairs();
+                        }
+                    });
+
+                }
+
+            }
+        };
+        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/personEvents", eventsRequest, eventNotifier)).start();
+    }
+
+    public void createClickableAffairs(){
         int[] taskLayoutIds = new int[] {
-                R.id.activity_familyBoard_monday_tasks,
-                R.id.activity_familyBoard_tuesday_tasks,
-                R.id.activity_familyBoard_wednesday_tasks,
-                R.id.activity_familyBoard_thursday_tasks,
-                R.id.activity_familyBoard_friday_tasks,
-                R.id.activity_familyBoard_saturday_tasks,
-                R.id.activity_familyBoard_sunday_tasks
+                R.id.activity_familyBoard_monday,
+                R.id.activity_familyBoard_tuesday,
+                R.id.activity_familyBoard_wednesday,
+                R.id.activity_familyBoard_thursday,
+                R.id.activity_familyBoard_friday,
+                R.id.activity_familyBoard_saturday,
+                R.id.activity_familyBoard_sunday
         };
 
         for(int i = 0; i < taskLayoutIds.length; i++){
@@ -255,12 +376,38 @@ public class FamilyBoardActivity extends AppCompatActivity {
                 Button btn = new Button(this);
                 btn.setText(task.taskName);
 
+
+                btn.setBackgroundColor(getResources().getColor(R.color.taskButtonColor));
+                btn.setScaleX(0.8F);
+                btn.setScaleY(0.8F);
+
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent taskDetailActivity = new Intent(FamilyBoardActivity.this, TaskDetailActivity.class);
                         taskDetailActivity.putExtra("task", task);
                         startActivity(taskDetailActivity);
+                    }
+                });
+                layout.addView(btn);
+            }
+        }
+
+        for(int i = 0; i < eventList.size(); i++){
+            final Event event = eventList.get(i);
+            if(currentWeek.containsValue(event.eventDate)){
+                LinearLayout layout = findViewById(taskLayoutIds[event.eventDate.getDayOfWeek().getValue()-1]);
+                Button btn = new Button(this);
+                btn.setText(event.eventName);
+                btn.setBackgroundColor(getResources().getColor(R.color.eventButtonColor));
+                btn.setScaleX(0.8F);
+                btn.setScaleY(0.8F);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent eventDetailActivity = new Intent(FamilyBoardActivity.this, TaskDetailActivity.class);
+                        eventDetailActivity.putExtra("event", event);
+                        startActivity(eventDetailActivity);
                     }
                 });
                 layout.addView(btn);
@@ -309,17 +456,22 @@ public class FamilyBoardActivity extends AppCompatActivity {
     public void goToNextWeek(){
         currentWeek = dateHandler.getNextWeek(currentWeek);
         fillDates();
-        createClickableTasks();
+        createClickableAffairs();
     }
     public void goToPreviousWeek(){
         currentWeek = dateHandler.getPreviousWeek(currentWeek);
         fillDates();
-        createClickableTasks();
+        createClickableAffairs();
     }
 
     public void addTask(){
         Intent addTaskActivity = new Intent(FamilyBoardActivity.this, AddTaskActivity.class);
         startActivity(addTaskActivity);
+    }
+
+    public void addEvent() {
+        Intent addEventActivity = new Intent(FamilyBoardActivity.this, AddEventActivity.class);
+        startActivity(addEventActivity);
     }
 
 }

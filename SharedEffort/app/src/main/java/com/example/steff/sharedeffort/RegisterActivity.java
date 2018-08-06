@@ -31,9 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mNewUserMailAddress;
     private EditText mNewUserPassword;
     private EditText mNewUserPasswordConfirmation;
-    private EditText mNewUserLName;
-    private EditText mNewUserFName;
-    private DatePicker mDatePicker;
+    private EditText mNewFamilyName;
     private Button mRegisterBtn;
 
     @Override
@@ -43,26 +41,20 @@ public class RegisterActivity extends AppCompatActivity {
         mNewUserMailAddress = findViewById(R.id.activity_register_mailAddress);
         mNewUserPassword = findViewById(R.id.activity_register_password);
         mNewUserPasswordConfirmation = findViewById(R.id.activity_register_passwordConfirmation);
-        mNewUserLName = findViewById(R.id.activity_register_lName);
-        mNewUserFName = findViewById(R.id.activity_register_fName);
-        mDatePicker = findViewById(R.id.activity_register_birthdate);
+        mNewFamilyName = findViewById(R.id.activity_register_familyName);
         initRegisterBtn();
     }
-
 
     private void initRegisterBtn(){
         mRegisterBtn = findViewById(R.id.activity_register_register_btn);
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String lastName = mNewUserLName.getText().toString();
-                String firstName = mNewUserFName.getText().toString();
                 String mailAddress = mNewUserMailAddress.getText().toString();
-                if(lastName.length() > 0 && firstName.length() > 0 && mailAddress.length() > 0){
+                String familyName = mNewFamilyName.getText().toString();
+                if(mailAddress.length() > 0){
                     String password = mNewUserPassword.getText().toString();
                     String passwordConfirmation = mNewUserPasswordConfirmation.getText().toString();
-
-                    String birthdate = mDatePicker.getYear() + "-" + (mDatePicker.getMonth() + 1) + "-" + mDatePicker.getDayOfMonth();
 
                     if(password.length() > 7){
                         if(password.equals(passwordConfirmation)){
@@ -70,9 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
                             try {
                                 jsonObject.put("mailAddress", mailAddress);
                                 jsonObject.put("password", password);
-                                jsonObject.put("lName", lastName);
-                                jsonObject.put("fName", firstName);
-                                jsonObject.put("birthdate", birthdate);
+                                jsonObject.put("familyName", familyName);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -93,8 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                     if(state == 1){
                                         PreviousToast.getInstance().setMessage(message);
-                                        Intent loginActivity = new Intent(RegisterActivity.this, LoginActivity.class);
-                                        startActivity(loginActivity);
+                                        finish();
                                     }
                                     else{
 
@@ -125,16 +114,11 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }
                 else{
-                    String message = "Les champs 'prénom', 'nom, et 'adresse email' sont requis";
+                    String message = "Veuillez compléter le champ 'adresse mail'";
                     Toaster toaster = new Toaster(message, RegisterActivity.this);
                     toaster.showToast();
                 }
-
             }
         });
-
-
     }
-
-
 }

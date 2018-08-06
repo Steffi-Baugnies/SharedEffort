@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:inputType="numberSigned"
         app:layout_constraintTop_toBottomOf="@+id/activity_addTask_points_text"
+        android:hint="0"
         />
 
     <TextView
@@ -49,6 +50,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/activity_addTask_pointsForTransfer_text"
+        android:hint="0"
         />
 
     <TextView

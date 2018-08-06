@@ -22,53 +22,18 @@ app.config['MYSQL_HOST'] = config.credentials['host']
 
 mysql.init_app(app)
 
-@app.route('/login', methods=['POST'])
-def login():
-	
-	jsonData = request.json
-	mailAddress = jsonData["mailAddress"]
-	password = jsonData["password"]
-	passwordHash = ''
-	userId = -1
-	familyId = -1
-	cursor = mysql.connection.cursor()
-	cursor.callproc('proc_getUserPasswordHash',[mailAddress])
-	for fields in cursor:
-		userId = fields[0]
-		familyId = fields[2]
-		passwordHash = fields[1]
-	cursor.close()
-	
-	if(familyId is None):
-		familyId = -1
-	
-	state = 0
-	if passwordHash != '':
-		if(bcrypt.check_password_hash(passwordHash, password)):
-			response = 'Mot de passe correct'
-			state = 1
-		else:
-			response = 'Mot de passe érroné'
-	else:
-		response = 'Nom d\'utilisateur incorrect'
-		
-	return jsonify({'connectionStatus': state, 'message' : response, 'userId' : userId, 'familyId' : familyId})
-	
 @app.route('/register', methods=['POST'])
 def register():
-
 	jsonData = request.json
 	mailAddress = jsonData["mailAddress"]
 	password = bcrypt.generate_password_hash(jsonData["password"])
-	lName = jsonData["lName"]
-	fName = jsonData["fName"]
-	birthdate = jsonData["birthdate"]
+	familyName = jsonData["familyName"]
 	rowCount = 0
 	state = 0
 	response = ''
 	try:
 		cursor = mysql.connection.cursor()
-		cursor.callproc('proc_createUser', [mailAddress, password, lName, fName, birthdate])
+		cursor.callproc('proc_register', [mailAddress, password, familyName])
 		for fields in cursor:
 			rowCount = fields[0]
 		if rowCount > 0:
@@ -84,16 +49,62 @@ def register():
 	
 	print(response)
 	return jsonify({'registrationStatus': state, 'message' : response})
+@app.route('/login', methods=['POST'])
+def login():
+	jsonData = request.json
+	mailAddress = jsonData["mailAddress"]
+	password = jsonData["password"]
+	passwordHash = ''
+	userId = -1
+	familyId = -1
+	cursor = mysql.connection.cursor()
+	cursor.callproc('proc_getUserPasswordHash',[mailAddress])
+	for fields in cursor:
+		userId = fields[0]
+		passwordHash = fields[1]
+		familyId = fields[2]
+	cursor.close()
+	
+	state = 0
+	if passwordHash != '':
+		if(bcrypt.check_password_hash(passwordHash, password)):
+			response = 'Mot de passe correct'
+			state = 1
+		else:
+			response = 'Mot de passe érroné'
+	else:
+		response = 'Nom d\'utilisateur incorrect'
+		
+	return jsonify({'connectionStatus': state, 'message' : response, 'familyId' : familyId})
 
-@app.route('/createBoard', methods=['POST'])
-def createBoard():
+@app.route('/addFamilyMember', methods=['POST'])
+def addFamilyMember():
+	jsonData = request.json
+	fname = jsonData["fname"]
+	lname = jsonData["lname"]
+	birthdate = jsonData["birthdate"]
+	pswd = jsonData["pswd"]
+	isAdmin = jsonData["isAdmin"]
+	famId = jsonData["famId"]
+	cursor = mysql.connection.cursor()
+	cursor.callproc('proc_addFamilyMember', [fname, lname, birthdate, pswd, isAdmin, famId])
+	
+	state = 0
+	
+	for fields in cursor: 
+		state = fields[0]
+	cursor.close()
+	mysql.connection.commit()
+	return jsonify({'state' : state})
+
+@app.route('/createFamily', methods=['POST'])
+def createFamily():
 
 	jsonData = request.json
-	boardName = jsonData["boardName"]
-	adminPswd = jsonData["adminPswd"]
+	familyName = jsonData["boardName"]
 	persId = jsonData["persId"]
 	cursor = mysql.connection.cursor()
-	cursor.callproc('proc_createBoard', [boardName, adminPswd, persId])
+	cursor.callproc('proc_createBoard', [familyName, persId])
 	
 	rowCount = 0
 	state = 0
@@ -145,7 +156,7 @@ def getTasksFromPerson():
 			'nomTache' : task[1],
 			'nbPointsTache' : task[2],
 			'nbPointsTransfert' : task[3],
-			'estRecurente' : task[4],
+			'estRecurrente' : task[4],
 			'idPersonne' : idP,
 			'dateTache' : task[6],
 			'estFaite' : task[7]
@@ -170,7 +181,7 @@ def getTasksFromFamily():
 			'nomTache' : task[1],
 			'nbPointsTache' : task[2],
 			'nbPointsTransfert' : task[3],
-			'estRecurente' : task[4],
+			'estRecurrente' : task[4],
 			'idPersonne' : idP,
 			'dateTache' : task[6],
 			'estFaite' : task[7]
@@ -178,6 +189,53 @@ def getTasksFromFamily():
 		tasks.append(task)
 	cursor.close()
 	return jsonify({'tasks' : tasks})
+
+@app.route('/board/personEvents', methods=["POST"])
+def getEventsFromPerson():
+	jsonData = request.json
+	familyId = jsonData["familyId"]
+	fName = jsonData["fName"]
+	cursor = mysql.connection.cursor()
+	personEvents = []
+	cursor.callproc('proc_getEventsFromPerson', [familyId, fName])
+	for event in cursor:
+		idP = event[3]
+		if idP is None :
+			idP = -1
+		event = {
+			'id' : event[0], 
+			'nomEvenement' : event[1],
+			'descriptionEvenement' : event[2],
+			'idPersonne' : idP,
+			'estRecurrent' : event[4],
+			'dateEvenement' : event[5]
+		}
+		personEvents.append(event)
+	cursor.close()
+	return jsonify({'personEvents' : personEvents})
+
+@app.route('/board/allEvents', methods=["POST"])
+def getEventsFromFamily():
+	jsonData = request.json
+	famId = jsonData["familyId"]
+	cursor = mysql.connection.cursor()
+	events = []
+	cursor.callproc('proc_getEventsFromFamily', [famId])
+	for event in cursor:
+		idP = event[3]
+		if idP is None :
+			idP = -1
+		event = {
+			'id' : event[0], 
+			'nomEvenement' : event[1],
+			'descriptionEvenement' : event[2],
+			'idPersonne' : idP,
+			'estRecurrent' : event[4],
+			'dateEvenement' : event[5]
+		}
+		events.append(event)
+	cursor.close()
+	return jsonify({'events' : events})
 	
 @app.route('/board/addTask', methods=["POST"])
 def addTask():
@@ -195,14 +253,42 @@ def addTask():
 	recurrent = jsonData["recurrent"]
 	cursor = mysql.connection.cursor()
 	message = ""
+	state = 0
 	cursor.callproc('proc_addTask', [connectedUser, pswd, taskName, points, pointsForTransfer, taskDate, persId, recurrent, famId])
 	
 	for fields in cursor:
 		message = fields[0].decode('utf-8')
+		state = fields[1]
 	cursor.close()
 	mysql.connection.commit()
 	print(message)
-	return jsonify({'message' : message})
+	return jsonify({'message' : message, 'state' : state})
+
+@app.route('/board/addEvent', methods=["POST"])
+def addEvent():
+	jsonData = request.json
+	eventName = jsonData["eventName"]
+	eventDescription = jsonData["eventDescription"]
+	eventDate = jsonData["eventDate"]
+	famId = jsonData["famId"]
+	persId = jsonData["persId"]
+	if persId == -1 : 
+		persId = None
+	recu = jsonData["recu"]
+	state = 0
+	cursor = mysql.connection.cursor()
+	cursor.callproc('proc_addEvent', [eventName, eventDescription, eventDate, famId, persId, recu])
+	
+	for fields in cursor:
+		state = fields[0]
+	if state == 1:
+		message = "L'événement a bien été ajouté"
+	else: 
+		message = "Erreur interne, veuillez réessayer plus tard"
+	cursor.close()
+	mysql.connection.commit()
+	return jsonify({'message' : message, 'state' : state})
+
 
 if __name__ == '__main__':
 	app.run(debug=True, threaded=True)

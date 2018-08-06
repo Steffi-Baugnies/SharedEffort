@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddFamilyMemberActivity">
+
+    <EditText
+        android:id="@+id/activity_addFamilyMember_fname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Prénom"/>
+
+    <EditText
+        android:id="@+id/activity_addFamilyMember_lname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Nom de Famille"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_fname"
+        />
+
+    <TextView
+        android:id="@+id/activity_addFamilyMember_birthdate_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date de naissance"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_lname" />
+
+    <DatePicker
+        android:id="@+id/activity_addFamilyMember_birthdate"
+        android:layout_width="wrap_content"
+        android:layout_height="99dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_birthdate_text"
+        >
+    </DatePicker>
+
+    <EditText
+        android:id="@+id/activity_addFamilyMember_pswd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Mot de passe"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_birthdate"/>
+
+    <EditText
+        android:id="@+id/activity_addFamilyMember_pswd_confirmation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Confirmation du mot de passe"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_pswd"/>
+
+    <LinearLayout
+        android:id="@+id/activity_addFamilyMember_isAdmin_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_pswd_confirmation">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="L'utilisateur aura-t-il les droits d'administrateur ? "/>
+        <CheckBox
+            android:id="@+id/activity_addFamilyMember_isAdmin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+                       />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/activity_addFamilyMember_validate_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Valider"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_isAdmin_layout"/>
+
+
+</android.support.constraint.ConstraintLayout>

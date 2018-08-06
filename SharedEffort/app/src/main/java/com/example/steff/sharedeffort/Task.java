@@ -13,22 +13,24 @@ public class Task implements Parcelable{
     public int taskId;
     public String taskName;
     public int points;
-    public int pointsForTransfert;
+    public int pointsForTransfer;
     public LocalDate taskDate;
-    public boolean isDone;
+    public int isDone;
     public int personId;
+    public boolean isRecu;
 
-    public Task(int taskId, String taskName, int points, int pointsForTransfert, String taskDate, int isDone, int personId){
+    public Task(int taskId, String taskName, int points, int pointsForTransfer, String taskDate, int isDone, int personId, int isRecu){
         this.taskId = taskId;
         this.taskName = taskName;
         this.points = points;
-        this.pointsForTransfert = pointsForTransfert;
+        this.pointsForTransfer = pointsForTransfer;
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z");
         this.taskDate = LocalDate.parse(taskDate, dateTimeFormatter);
 
-        this.isDone = isDone == 1 ? true : false;
+        this.isDone = isDone;
         this.personId = personId;
+        this.isRecu = isRecu == 1 ? true : false;
 
     }
 
@@ -36,10 +38,11 @@ public class Task implements Parcelable{
         taskId = in.readInt();
         taskName = in.readString();
         points = in.readInt();
-        pointsForTransfert = in.readInt();
+        pointsForTransfer = in.readInt();
         taskDate = (LocalDate) in.readSerializable();
-        isDone = in.readByte() != 0;
+        isDone = in.readInt();
         personId = in.readInt();
+        isRecu = in.readByte() != 0;
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -64,9 +67,10 @@ public class Task implements Parcelable{
         dest.writeInt(taskId);
         dest.writeString(taskName);
         dest.writeInt(points);
-        dest.writeInt(pointsForTransfert);
+        dest.writeInt(pointsForTransfer);
         dest.writeSerializable(taskDate);
-        dest.writeByte((byte)(isDone?1:0));
+        dest.writeInt(isDone);
         dest.writeInt(personId);
+        dest.writeByte((byte)(isRecu?1:0));
     }
 }

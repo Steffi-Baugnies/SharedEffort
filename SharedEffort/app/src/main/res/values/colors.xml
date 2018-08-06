@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="error">#fc5b53</color>
+    <color name="taskButtonColor">#7681e8</color>
+    <color name="eventButtonColor">#e06b64</color>
 </resources>

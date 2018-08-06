@@ -26,11 +26,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".BoardSelectionActivity" />
-        <activity android:name=".BoardCreationActivity" />
         <activity android:name=".FamilyBoardActivity" />
         <activity android:name=".TaskDetailActivity" />
-        <activity android:name=".AddTaskActivity"></activity>
+        <activity android:name=".AddTaskActivity" />
+        <activity android:name=".AddEventActivity" />
+        <activity android:name=".EventDetailActivity" />
+        <activity android:name=".FamilyMemberManagementActivity" />
+        <activity android:name=".AddFamilyMemberActivity"></activity>
     </application>
 
 </manifest>

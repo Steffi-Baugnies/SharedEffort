@@ -1,6 +1,7 @@
 package com.example.steff.sharedeffort;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -67,12 +68,15 @@ public class AddTaskActivity extends AppCompatActivity {
     public void addTask(){
         JSONObject task = new JSONObject();
         String taskDate = mDatePicker.getYear() + "-" + (mDatePicker.getMonth() + 1) + "-" + mDatePicker.getDayOfMonth() + " " + mTimePicker.getHour() + ":" + mTimePicker.getMinute();
+        String points = (mPoints.getText().length() == 0 ? "0" : mPoints.getText().toString());
+        String pointsForTransfer = (mPointsForTransfer.getText().length() == 0 ? "0" : mPointsForTransfer.getText().toString());
+
         try {
             task.put("connectedUser", ConnectedUserInfo.getInstance().getConnectedUser());
             task.put("pswd", mAdminPswd);
             task.put("taskName", mTaskName.getText());
-            task.put("points", mPoints.getText());
-            task.put("pointsForTransfer", mPointsForTransfer.getText());
+            task.put("points", points);
+            task.put("pointsForTransfer", pointsForTransfer);
             task.put("taskDate", taskDate);
             task.put("persId", userInfo.get(mUserSpinner.getSelectedItem()));
             task.put("recurrent", mRecurrence.isChecked());
@@ -85,7 +89,21 @@ public class AddTaskActivity extends AppCompatActivity {
             @Override
             public void RequestComplete(JSONObject jsonObject) {
                 System.out.println(jsonObject.toString());
-
+                int state = 0;
+                String message = "";
+                try {
+                    state = jsonObject.getInt("state");
+                    message = jsonObject.getString("message");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(state == 0){
+                    Toaster toast = new Toaster(message, AddTaskActivity.this);
+                }
+                else{
+                    PreviousToast.getInstance().setMessage(message);
+                    finish();
+                }
             }
         };
         new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/addTask", task, eventNotifier)).start();
@@ -104,7 +122,13 @@ public class AddTaskActivity extends AppCompatActivity {
         mValidateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openAdminPasswordPopup();
+                if(mTaskName.getText().length() == 0){
+                    Toaster toast = new Toaster("Veuillez donner un nom à la tâche", AddTaskActivity.this);
+                    toast.showToast();
+                }
+                else {
+                    openAdminPasswordPopup();
+                }
             }
         });
     }

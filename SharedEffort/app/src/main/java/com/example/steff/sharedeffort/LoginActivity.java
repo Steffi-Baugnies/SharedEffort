@@ -36,6 +36,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    protected void onRestart() {
+        super.onRestart();
+        String previousMessage = PreviousToast.getInstance().getMessage();
+        if(previousMessage != null){
+            Toaster toaster = new Toaster(previousMessage, LoginActivity.this);
+            toaster.showToast();
+        }
+    }
     private void InitLoginButton(){
         mLoginBtn = findViewById(R.id.activity_login_login_btn);
 
@@ -55,30 +63,26 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void RequestComplete(JSONObject jsonObject) {
                             int loginState = 0;
-                            int userId = -1;
                             try {
                                 loginState = (int) jsonObject.get("connectionStatus");
-                                userId = (int) jsonObject.get("userId");
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            if (loginState == 1 && userId != -1) {
-                                ConnectedUserInfo.getInstance().setConnectedUser(userId);
+                            if (loginState == 1) {
                                 int familyId = -1;
+                                int userId = -1;
                                 try {
                                     familyId = jsonObject.getInt("familyId");
+                                    userId = jsonObject.getInt("userId");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                if(familyId != -1){
-                                    ConnectedUserInfo.getInstance().setFamilyId(familyId);
-                                    Intent familyBoardActivity = new Intent(LoginActivity.this, FamilyBoardActivity.class);
-                                    startActivity(familyBoardActivity);
-                                }
-                                else{
-                                    Intent boardSelectionActivity = new Intent(LoginActivity.this, BoardSelectionActivity.class);
-                                    startActivity(boardSelectionActivity);
-                                }
+                                ConnectedUserInfo.getInstance().setFamilyId(familyId);
+                                ConnectedUserInfo.getInstance().setConnectedUser(userId);
+                                Intent userManagementActivity = new Intent(LoginActivity.this, FamilyMemberManagementActivity.class);
+                                startActivity(userManagementActivity);
+
                             }
                             else {
                                 try {
