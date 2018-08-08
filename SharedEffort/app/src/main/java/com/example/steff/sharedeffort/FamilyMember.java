@@ -24,7 +24,7 @@ public class FamilyMember {
 
         this.points = points;
         this.pswd = pswd;
-        this.isAdmin = isAdmin == 0?false:true; 
+        this.isAdmin = isAdmin == 0?false:true;
     }
 
     public int getId() {

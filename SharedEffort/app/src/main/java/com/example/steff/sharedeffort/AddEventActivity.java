@@ -29,8 +29,6 @@ public class AddEventActivity extends AppCompatActivity {
     private Spinner mUserSpinner;
     private AppCompatCheckBox mRecurrence;
 
-    private Map<String, Integer> userInfo;
-
     private Button mValidateBtn;
 
     @Override
@@ -48,52 +46,18 @@ public class AddEventActivity extends AppCompatActivity {
         mValidateBtn = findViewById(R.id.activity_addEvent_validate_btn);
 
         initValidateBtn();
-        getFamilyInfo();
+        createSpinner();
     }
 
-    public void getFamilyInfo(){
-        JSONObject familyId = new JSONObject();
-        try {
-            familyId.put("familyId", ConnectedUserInfo.getInstance().getFamilyId());
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+    public void createSpinner(){
+        List<String> familyMembersName = new ArrayList<>();
+        List<FamilyMember> familyMembers = ConnectedUserInfo.getInstance().getFamilyMembers();
+        familyMembersName.add("Tout le monde");
+        for (int i = 0; i < familyMembers.size(); i++) {
+            familyMembersName.add(familyMembers.get(i).getFname());
         }
-        // to modify
-        IEventNotifier eventNotifier = new IEventNotifier() {
-            @Override
-            public void RequestComplete(JSONObject jsonObject) {
-                JSONArray familyMembers = null;
-                try {
-                    familyMembers = jsonObject.getJSONArray("familyMembers");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                userInfo = new HashMap<>();
-                final List<String> familyMemberNames = new ArrayList<>();
-                familyMemberNames.add("Tout le monde");
-                userInfo.put("Tout le monde", -1);
-                for(int i = 0; i < familyMembers.length(); i++){
-                    try {
-                        JSONObject familyMember = (JSONObject) familyMembers.get(i);
-                        familyMemberNames.add(familyMember.getString("fname"));
-                        userInfo.put(familyMember.getString("fname"), familyMember.getInt("id"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                AddEventActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        createSpinner(familyMemberNames);
-                    }
-                });
 
-            }
-        };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/familyInfo", familyId, eventNotifier)).start();
-    }
-
-    public void createSpinner(List<String> familyMembersName){
-        mUserSpinner = findViewById(R.id.activity_addEvent_userSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, familyMembersName);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         mUserSpinner.setAdapter(adapter);
@@ -118,13 +82,15 @@ public class AddEventActivity extends AppCompatActivity {
         JSONObject event = new JSONObject();
         String eventDate = mDatePicker.getYear() + "-" + (mDatePicker.getMonth() + 1) + "-" + mDatePicker.getDayOfMonth() + " " + mTimePicker.getHour() + ":" + mTimePicker.getMinute();
         String desc = (mEventDescription.getText().length() == 0 ? "" : mEventDescription.getText().toString());
-
+        List<FamilyMember> familyMembers = ConnectedUserInfo.getInstance().getFamilyMembers();
+        int selectedItemPosition = mUserSpinner.getSelectedItemPosition();
+        int persIdIndex = (selectedItemPosition > 0 ) ? familyMembers.get(selectedItemPosition - 1).getId() : -1;
         try {
             event.put("eventName", mEventName.getText());
             event.put("eventDescription", desc);
             event.put("eventDate", eventDate);
             event.put("famId", ConnectedUserInfo.getInstance().getFamilyId());
-            event.put("persId", userInfo.get(mUserSpinner.getSelectedItem()));
+            event.put("persId", persIdIndex);
             event.put("recu", mRecurrence.isChecked());
         } catch (JSONException e) {
             e.printStackTrace();

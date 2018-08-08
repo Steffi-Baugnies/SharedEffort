@@ -1,15 +1,12 @@
 package com.example.steff.sharedeffort;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.util.JsonReader;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -39,10 +36,6 @@ public class AddTaskActivity extends AppCompatActivity {
 
     private Button mValidateBtn;
 
-    private String mAdminPswd = "";
-
-    private Map<String, Integer> userInfo;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,9 +49,9 @@ public class AddTaskActivity extends AppCompatActivity {
         mUserSpinner = findViewById(R.id.activity_addTask_userSpinner);
         mRecurrence = findViewById(R.id.activity_addTask_recurrence);
         mValidateBtn = findViewById(R.id.activity_addTask_validateBtn);
-        getFamilyInfo();
         setTimePickerMode();
         initValidateBtn();
+        createSpinner();
     }
 
     public void setTimePickerMode(){
@@ -70,17 +63,17 @@ public class AddTaskActivity extends AppCompatActivity {
         String taskDate = mDatePicker.getYear() + "-" + (mDatePicker.getMonth() + 1) + "-" + mDatePicker.getDayOfMonth() + " " + mTimePicker.getHour() + ":" + mTimePicker.getMinute();
         String points = (mPoints.getText().length() == 0 ? "0" : mPoints.getText().toString());
         String pointsForTransfer = (mPointsForTransfer.getText().length() == 0 ? "0" : mPointsForTransfer.getText().toString());
-
+        List<FamilyMember> familyMembers = ConnectedUserInfo.getInstance().getFamilyMembers();
+        int selectedItemPosition = mUserSpinner.getSelectedItemPosition();
+        int persIdIndex = (selectedItemPosition > 0 ) ? familyMembers.get(selectedItemPosition - 1).getId() : -1;
         try {
-            task.put("connectedUser", ConnectedUserInfo.getInstance().getConnectedUser());
-            task.put("pswd", mAdminPswd);
             task.put("taskName", mTaskName.getText());
             task.put("points", points);
-            task.put("pointsForTransfer", pointsForTransfer);
-            task.put("taskDate", taskDate);
-            task.put("persId", userInfo.get(mUserSpinner.getSelectedItem()));
-            task.put("recurrent", mRecurrence.isChecked());
+            task.put("tpoints", pointsForTransfer);
+            task.put("isRecu", mRecurrence.isChecked());
+            task.put("persId", persIdIndex);
             task.put("famId", ConnectedUserInfo.getInstance().getFamilyId());
+            task.put("taskDate", taskDate);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -92,13 +85,14 @@ public class AddTaskActivity extends AppCompatActivity {
                 int state = 0;
                 String message = "";
                 try {
-                    state = jsonObject.getInt("state");
+                    state = jsonObject.getInt("status");
                     message = jsonObject.getString("message");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 if(state == 0){
                     Toaster toast = new Toaster(message, AddTaskActivity.this);
+                    toast.showToast();
                 }
                 else{
                     PreviousToast.getInstance().setMessage(message);
@@ -110,9 +104,14 @@ public class AddTaskActivity extends AppCompatActivity {
 
     }
 
+    public void createSpinner() {
+        List<String> familyMembersName = new ArrayList<>();
+        List<FamilyMember> familyMembers = ConnectedUserInfo.getInstance().getFamilyMembers();
+        familyMembersName.add("libre");
+        for (int i = 0; i < familyMembers.size(); i++) {
+            familyMembersName.add(familyMembers.get(i).getFname());
+        }
 
-    public void createSpinner(List<String> familyMembersName){
-        mUserSpinner = findViewById(R.id.activity_addTask_userSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, familyMembersName);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         mUserSpinner.setAdapter(adapter);
@@ -127,74 +126,9 @@ public class AddTaskActivity extends AppCompatActivity {
                     toast.showToast();
                 }
                 else {
-                    openAdminPasswordPopup();
+                    addTask();
                 }
             }
         });
-    }
-
-    public void openAdminPasswordPopup(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.dialog_admin_password, null);
-        builder.setView(dialogView).setPositiveButton("Valider", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EditText editText = dialogView.findViewById(R.id.dialog_admin_password_input);
-                System.out.println(editText.getText().toString());
-                mAdminPswd = editText.getText().toString();
-
-                addTask();
-
-            }
-        }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-    public void getFamilyInfo(){
-        JSONObject familyId = new JSONObject();
-        try {
-            familyId.put("familyId", ConnectedUserInfo.getInstance().getFamilyId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // to modify
-        IEventNotifier eventNotifier = new IEventNotifier() {
-            @Override
-            public void RequestComplete(JSONObject jsonObject) {
-                JSONArray familyMembers = null;
-                try {
-                    familyMembers = jsonObject.getJSONArray("familyMembers");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                userInfo = new HashMap<>();
-                final List<String> familyMemberNames = new ArrayList<>();
-                familyMemberNames.add("Libre");
-                userInfo.put("Libre", -1);
-                for(int i = 0; i < familyMembers.length(); i++){
-                    try {
-                        JSONObject familyMember = (JSONObject) familyMembers.get(i);
-                        familyMemberNames.add(familyMember.getString("fname"));
-                        userInfo.put(familyMember.getString("fname"), familyMember.getInt("id"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                AddTaskActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        createSpinner(familyMemberNames);
-                    }
-                });
-
-            }
-        };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/familyInfo", familyId, eventNotifier)).start();
     }
 }

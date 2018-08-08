@@ -59,8 +59,8 @@ public class FamilyBoardActivity extends AppCompatActivity {
         dateHandler = new DateHandler();
         currentWeek = dateHandler.getWeekDates();
         fillDates();
-        getFamilyInfo();
-
+        createSpinner();
+        getAllTasks();
         previousWeekBtn = findViewById(R.id.activity_familyBoard_previous_week_btn);
         nextWeekBtn = findViewById(R.id.activity_familyBoard_next_week_btn);
         addTaskBtn = findViewById(R.id.activity_familyBoard_addTask_btn);
@@ -102,8 +102,10 @@ public class FamilyBoardActivity extends AppCompatActivity {
             Toaster toaster = new Toaster(previousMessage, FamilyBoardActivity.this);
             toaster.showToast();
         }
-        getFamilyInfo();
         fillDates();
+        createSpinner();
+        getAllTasks();
+
     }
     public void fillDates(){
         String[] keys = dateHandler.getDayNames();
@@ -123,7 +125,17 @@ public class FamilyBoardActivity extends AppCompatActivity {
         }
     }
 
-    public void createSpinner(List<String> familyMembersName){
+    public void createSpinner(){
+        List<String> familyMembersName  = new ArrayList<>();
+        List<FamilyMember> familyMembers = ConnectedUserInfo.getInstance().getFamilyMembers();
+
+        familyMembersName.add("Voir tout");
+        familyMembersName.add("Voir libre");
+
+        for(int i = 0; i < familyMembers.size(); i++){
+            familyMembersName.add(familyMembers.get(i).getFname());
+        }
+
         mUserSpinner = findViewById(R.id.activity_familyBoard_userSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, familyMembersName);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -131,12 +143,11 @@ public class FamilyBoardActivity extends AppCompatActivity {
         mUserSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(position);
                 if(position == 0){
-                    getAllTasks();
+                   // getAllTasks();
                 }
                 else{
-                    getPersonTasks();
+                    //getPersonTasks();
                 }
             }
 
@@ -145,7 +156,6 @@ public class FamilyBoardActivity extends AppCompatActivity {
 
             }
         });
-        getPersonTasks();
     }
 
     public void getAllTasks(){
@@ -175,7 +185,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
                                     taskObject.getInt("nbPointsTache"),
                                     taskObject.getInt("nbPointsTransfert"),
                                     taskObject.getString("dateTache"),
-                                    taskObject.getInt("estFaite"),
+                                    //taskObject.getInt("estFaite"),
                                     taskObject.getInt("idPersonne"),
                                     taskObject.getInt("estRecurrente")
                             );
@@ -277,7 +287,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
                                     taskObject.getInt("nbPointsTache"),
                                     taskObject.getInt("nbPointsTransfert"),
                                     taskObject.getString("dateTache"),
-                                    taskObject.getInt("estFaite"),
+                                   // taskObject.getInt("estFaite"),
                                     taskObject.getInt("idPersonne"),
                                     taskObject.getInt("estRecurrente")
                             );
@@ -413,44 +423,6 @@ public class FamilyBoardActivity extends AppCompatActivity {
                 layout.addView(btn);
             }
         }
-    }
-
-    public void getFamilyInfo(){
-        JSONObject familyId = new JSONObject();
-        try {
-            familyId.put("familyId", ConnectedUserInfo.getInstance().getFamilyId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // to modify
-        IEventNotifier eventNotifier = new IEventNotifier() {
-            @Override
-            public void RequestComplete(JSONObject jsonObject) {
-                JSONArray familyMembers = null;
-                try {
-                    familyMembers = jsonObject.getJSONArray("familyMembers");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                final List<String> familyMemberNames = new ArrayList<>();
-                familyMemberNames.add("Voir tout");
-                for(int i = 0; i < familyMembers.length(); i++){
-                    try {
-                        JSONObject familyMember = (JSONObject) familyMembers.get(i); 
-                        familyMemberNames.add(familyMember.getString("fname"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                FamilyBoardActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        createSpinner(familyMemberNames);
-                    }
-                });
-
-            }
-        };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/familyInfo", familyId, eventNotifier)).start();
     }
 
     public void goToNextWeek(){

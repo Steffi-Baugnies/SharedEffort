@@ -15,11 +15,11 @@ public class Task implements Parcelable{
     public int points;
     public int pointsForTransfer;
     public LocalDate taskDate;
-    public int isDone;
+    //public int isDone;
     public int personId;
     public boolean isRecu;
 
-    public Task(int taskId, String taskName, int points, int pointsForTransfer, String taskDate, int isDone, int personId, int isRecu){
+    public Task(int taskId, String taskName, int points, int pointsForTransfer, String taskDate, /*int isDone,*/ int personId, int isRecu){
         this.taskId = taskId;
         this.taskName = taskName;
         this.points = points;
@@ -28,7 +28,7 @@ public class Task implements Parcelable{
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z");
         this.taskDate = LocalDate.parse(taskDate, dateTimeFormatter);
 
-        this.isDone = isDone;
+        //this.isDone = isDone;
         this.personId = personId;
         this.isRecu = isRecu == 1 ? true : false;
 
@@ -40,7 +40,7 @@ public class Task implements Parcelable{
         points = in.readInt();
         pointsForTransfer = in.readInt();
         taskDate = (LocalDate) in.readSerializable();
-        isDone = in.readInt();
+        //isDone = in.readInt();
         personId = in.readInt();
         isRecu = in.readByte() != 0;
     }
@@ -69,7 +69,7 @@ public class Task implements Parcelable{
         dest.writeInt(points);
         dest.writeInt(pointsForTransfer);
         dest.writeSerializable(taskDate);
-        dest.writeInt(isDone);
+        //dest.writeInt(isDone);
         dest.writeInt(personId);
         dest.writeByte((byte)(isRecu?1:0));
     }

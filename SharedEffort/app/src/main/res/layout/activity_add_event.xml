@@ -15,7 +15,7 @@
 
     <EditText
         android:id="@+id/activity_addEvent_eventName"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/activity_addEvent_eventName_text"/>
 
@@ -28,7 +28,7 @@
 
     <EditText
         android:id="@+id/activity_addEvent_eventDesc"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/activity_addEvent_eventDesc_text"/>
 
@@ -58,7 +58,7 @@
 
     <Spinner
         android:id="@+id/activity_addEvent_userSpinner"
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/activity_addEvent_timePicker"
         android:layout_margin="10dp"/>

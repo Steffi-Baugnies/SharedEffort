@@ -6,12 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".FamilyMemberManagementActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/activity_familyMemberManagement_memberList"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    </RelativeLayout>
+    </LinearLayout>
     <Button
         android:id="@+id/activity_familyMemberManagement_addUser_btn"
         android:layout_width="wrap_content"

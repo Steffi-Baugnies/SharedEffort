@@ -36,6 +36,7 @@ def register():
 		cursor.callproc('proc_register', [mailAddress, password, familyName])
 		for fields in cursor:
 			rowCount = fields[0]
+			
 		if rowCount > 0:
 			response = 'Le compte a bien été créé'
 			state = 1
@@ -75,7 +76,7 @@ def login():
 	else:
 		response = 'Nom d\'utilisateur incorrect'
 		
-	return jsonify({'connectionStatus': state, 'message' : response, 'familyId' : familyId})
+	return jsonify({'connectionStatus': state, 'message' : response, 'familyId' : familyId, 'userId' : userId})
 
 @app.route('/addFamilyMember', methods=['POST'])
 def addFamilyMember():
@@ -99,7 +100,6 @@ def addFamilyMember():
 
 @app.route('/createFamily', methods=['POST'])
 def createFamily():
-
 	jsonData = request.json
 	familyName = jsonData["boardName"]
 	persId = jsonData["persId"]
@@ -121,18 +121,22 @@ def createFamily():
 	return jsonify({'boardCreationStatus': state, 'message' : response})
 
 
-@app.route('/board/familyInfo', methods=["POST"])
-def getFamilyInfo():
+@app.route('/board/familyMembersInfo', methods=["POST"])
+def getFamilyMembersInfo():
 	jsonData = request.json
 	familyId = jsonData["familyId"]
 	cursor = mysql.connection.cursor()
 	familyMembers = []
-	cursor.callproc('proc_getUsersFromFamily', [familyId])
+	cursor.callproc('proc_getFamilyMembersInfo', [familyId])
 	for familyMember in cursor:
 		familyMember = {
 			'id' : familyMember[0],
-			'lname' : familyMember[1], 
-			'fname' : familyMember[2]
+			'fname' : familyMember[1], 
+			'lname' : familyMember[2], 
+			'birthdate' : familyMember[3], 
+			'points' : familyMember[4], 
+			'mdp' : familyMember[5], 
+			'isAdmin' : familyMember[6]
 		}
 		familyMembers.append(familyMember)
 	cursor.close()
@@ -183,8 +187,7 @@ def getTasksFromFamily():
 			'nbPointsTransfert' : task[3],
 			'estRecurrente' : task[4],
 			'idPersonne' : idP,
-			'dateTache' : task[6],
-			'estFaite' : task[7]
+			'dateTache' : task[6]
 		}
 		tasks.append(task)
 	cursor.close()
@@ -240,29 +243,35 @@ def getEventsFromFamily():
 @app.route('/board/addTask', methods=["POST"])
 def addTask():
 	jsonData = request.json
-	connectedUser = jsonData["connectedUser"]
-	pswd = jsonData["pswd"]
 	taskName = jsonData["taskName"]
-	points = int(jsonData["points"])
-	pointsForTransfer = int(jsonData["pointsForTransfer"])
-	taskDate = jsonData["taskDate"]
+	points = jsonData["points"]
+	tpoints = jsonData["tpoints"]
+	isRecu = jsonData["isRecu"]
 	persId = jsonData["persId"]
 	famId = jsonData["famId"]
-	if persId == -1 :
+	taskDate = jsonData["taskDate"]
+	
+	if persId == -1 : 
 		persId = None
-	recurrent = jsonData["recurrent"]
+	
 	cursor = mysql.connection.cursor()
+	cursor.callproc('proc_addTask', [taskName, points, tpoints, isRecu, persId, famId, taskDate])
+	
+	rowCount = 0
 	message = ""
-	state = 0
-	cursor.callproc('proc_addTask', [connectedUser, pswd, taskName, points, pointsForTransfer, taskDate, persId, recurrent, famId])
 	
 	for fields in cursor:
-		message = fields[0].decode('utf-8')
-		state = fields[1]
+		rowCount = fields[0]
+	
 	cursor.close()
 	mysql.connection.commit()
-	print(message)
-	return jsonify({'message' : message, 'state' : state})
+	
+	if rowCount > 0:
+		message = "La tâche a bien été ajoutée"
+	else:
+		message = "Erreur interne, veuillez réessayer plus tard"
+
+	return jsonify({'status' : rowCount, 'message' : message})
 
 @app.route('/board/addEvent', methods=["POST"])
 def addEvent():
