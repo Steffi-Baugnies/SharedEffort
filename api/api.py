@@ -143,102 +143,50 @@ def getFamilyMembersInfo():
 	
 	return jsonify({'familyMembers': familyMembers})
 	
-@app.route('/board/personTasks', methods=["POST"])
-def getTasksFromPerson():
+@app.route('/board/getTasksAndEvents', methods=["POST"])
+def getTasksAndEventsFromFamily():
 	jsonData = request.json
 	familyId = jsonData["familyId"]
-	fName = jsonData["fName"]
-	cursor = mysql.connection.cursor()
-	personTasks = []
-	cursor.callproc('proc_getTasksFromPerson', [familyId, fName])
-	for task in cursor:
-		idP = task[5]
-		if idP is None :
-			idP = -1
-		task = {
-			'id' : task[0], 
-			'nomTache' : task[1],
-			'nbPointsTache' : task[2],
-			'nbPointsTransfert' : task[3],
-			'estRecurrente' : task[4],
-			'idPersonne' : idP,
-			'dateTache' : task[6],
-			'estFaite' : task[7]
-		}
-		personTasks.append(task)
-	cursor.close()
-	return jsonify({'personTasks' : personTasks})
-
-@app.route('/board/allTasks', methods=["POST"])
-def getTasksFromFamily():
-	jsonData = request.json
-	famId = jsonData["familyId"]
+	
 	cursor = mysql.connection.cursor()
 	tasks = []
-	cursor.callproc('proc_getTasksFromFamily', [famId])
-	for task in cursor:
-		idP = task[5]
-		if idP is None :
-			idP = -1
+	cursor.callproc('proc_getAllTasksFromFamily', [familyId])
+	for task in cursor: 
+		persId = task[5]
+		if persId is None: 
+			persId = -1
 		task = {
-			'id' : task[0], 
-			'nomTache' : task[1],
-			'nbPointsTache' : task[2],
-			'nbPointsTransfert' : task[3],
-			'estRecurrente' : task[4],
-			'idPersonne' : idP,
-			'dateTache' : task[6]
+			'taskId' : task[0], 
+			'taskName' : task[1], 
+			'points' : task[2],
+			'tPoints' : task[3],
+			'isRecu' : task[4], 
+			'persId' : persId,
+			'taskDate' : task[6], 
+			'status' : task[7]
 		}
 		tasks.append(task)
 	cursor.close()
-	return jsonify({'tasks' : tasks})
-
-@app.route('/board/personEvents', methods=["POST"])
-def getEventsFromPerson():
-	jsonData = request.json
-	familyId = jsonData["familyId"]
-	fName = jsonData["fName"]
-	cursor = mysql.connection.cursor()
-	personEvents = []
-	cursor.callproc('proc_getEventsFromPerson', [familyId, fName])
-	for event in cursor:
-		idP = event[3]
-		if idP is None :
-			idP = -1
-		event = {
-			'id' : event[0], 
-			'nomEvenement' : event[1],
-			'descriptionEvenement' : event[2],
-			'idPersonne' : idP,
-			'estRecurrent' : event[4],
-			'dateEvenement' : event[5]
-		}
-		personEvents.append(event)
-	cursor.close()
-	return jsonify({'personEvents' : personEvents})
-
-@app.route('/board/allEvents', methods=["POST"])
-def getEventsFromFamily():
-	jsonData = request.json
-	famId = jsonData["familyId"]
+	
 	cursor = mysql.connection.cursor()
 	events = []
-	cursor.callproc('proc_getEventsFromFamily', [famId])
+	cursor.callproc('proc_getAllEventsFromFamily', [familyId])
 	for event in cursor:
-		idP = event[3]
-		if idP is None :
-			idP = -1
+		persId = event[3]
+		if persId is None:
+			persId = -1
 		event = {
-			'id' : event[0], 
-			'nomEvenement' : event[1],
-			'descriptionEvenement' : event[2],
-			'idPersonne' : idP,
-			'estRecurrent' : event[4],
-			'dateEvenement' : event[5]
+			'eventId' : event[0], 
+			'eventName' : event[1], 
+			'eventDesc' : event[2],
+			'persId' : persId,
+			'isRecu' : event[4], 
+			'eventDate' : event[5] 
 		}
 		events.append(event)
 	cursor.close()
-	return jsonify({'events' : events})
+	
+	return jsonify({'tasks' : tasks, 'events' : events})
 	
 @app.route('/board/addTask', methods=["POST"])
 def addTask():
@@ -298,6 +246,25 @@ def addEvent():
 	mysql.connection.commit()
 	return jsonify({'message' : message, 'state' : state})
 
+@app.route('/board/claimTask', methods=["POST"])
+def claimTask(): 
+	jsonData = request.json
+	persId = jsonData["persId"]
+	taskId = jsonData["taskId"]
+	cursor = mysql.connection.cursor()
+	
+	state = 0
+	cursor.callproc('proc_claimTask', [persId, taskId])
+	
+	for fields in cursor:
+		state = fields[0]
+	if state == 1:
+		message = "La tâche vous est maintenant attribuée"
+	else: 
+		message == "Erreur interne, veuillez réessayer plus tard"
+	cursor.close()
+	mysql.connection.commit()
+	return jsonify({'message' : message, 'state' : state})
 
 if __name__ == '__main__':
 	app.run(debug=True, threaded=True)

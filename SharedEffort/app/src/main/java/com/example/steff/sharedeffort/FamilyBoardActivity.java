@@ -22,6 +22,9 @@ import org.json.JSONObject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -29,22 +32,20 @@ import java.util.Map;
 public class FamilyBoardActivity extends AppCompatActivity {
 
     private Spinner mUserSpinner;
+    private Button mPreviousWeekBtn;
+    private Button mNextWeekBtn;
+    private Button mAddTaskBtn;
+    private Button mAddEventBtn;
 
-    private Button previousWeekBtn;
+    private List<Task> mTaskList;
+    private List<Event> mEventList;
 
-    private Button nextWeekBtn;
+    private Map<String, LocalDate> mCurrentWeek;
+    private DateHandler mDateHandler;
 
-    private Button addTaskBtn;
-
-    private Button addEventBtn;
-
-    private List<Task> taskList;
-
-    private List<Event> eventList;
-
-    private Map<String, LocalDate> currentWeek;
-
-    private DateHandler dateHandler;
+    private List<Task> mFreeTasks;
+    private HashMap<Integer, List<Task>> mPersonTasks;
+    private HashMap<Integer, List<Event>> mPersonEvents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,43 +57,43 @@ public class FamilyBoardActivity extends AppCompatActivity {
             toaster.showToast();
         }
 
-        dateHandler = new DateHandler();
-        currentWeek = dateHandler.getWeekDates();
+        mDateHandler = new DateHandler();
+        mCurrentWeek = mDateHandler.getWeekDates();
         fillDates();
         createSpinner();
-        getAllTasks();
-        previousWeekBtn = findViewById(R.id.activity_familyBoard_previous_week_btn);
-        nextWeekBtn = findViewById(R.id.activity_familyBoard_next_week_btn);
-        addTaskBtn = findViewById(R.id.activity_familyBoard_addTask_btn);
-        addEventBtn = findViewById(R.id.activity_familyBoard_addEvent_btn);
+        mPreviousWeekBtn = findViewById(R.id.activity_familyBoard_previous_week_btn);
+        mNextWeekBtn = findViewById(R.id.activity_familyBoard_next_week_btn);
+        mAddTaskBtn = findViewById(R.id.activity_familyBoard_addTask_btn);
+        mAddEventBtn = findViewById(R.id.activity_familyBoard_addEvent_btn);
 
-        previousWeekBtn.setOnClickListener(new View.OnClickListener() {
+        mPreviousWeekBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToPreviousWeek();
             }
         });
 
-        nextWeekBtn.setOnClickListener(new View.OnClickListener() {
+        mNextWeekBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToNextWeek();
             }
         });
 
-        addTaskBtn.setOnClickListener(new View.OnClickListener() {
+        mAddTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addTask();
             }
         });
 
-        addEventBtn.setOnClickListener(new View.OnClickListener() {
+        mAddEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addEvent();
             }
         });
+        getTasksAndEvents();
     }
 
     public void onRestart() {
@@ -102,13 +103,11 @@ public class FamilyBoardActivity extends AppCompatActivity {
             Toaster toaster = new Toaster(previousMessage, FamilyBoardActivity.this);
             toaster.showToast();
         }
-        fillDates();
-        createSpinner();
-        getAllTasks();
+        getTasksAndEvents();
 
     }
     public void fillDates(){
-        String[] keys = dateHandler.getDayNames();
+        String[] keys = mDateHandler.getDayNames();
         int[] dateViewIds = new int[] {
                 R.id.activity_familyBoard_monday_text,
                 R.id.activity_familyBoard_tuesday_text,
@@ -120,7 +119,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         };
         for(int i = 0; i < keys.length; i++){
             TextView textView = findViewById(dateViewIds[i]);
-            String localDate = currentWeek.get(keys[i]).format(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.FRENCH));
+            String localDate = mCurrentWeek.get(keys[i]).format(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.FRENCH));
             textView.setText(localDate);
         }
     }
@@ -130,7 +129,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         List<FamilyMember> familyMembers = ConnectedUserInfo.getInstance().getFamilyMembers();
 
         familyMembersName.add("Voir tout");
-        familyMembersName.add("Voir libre");
+        familyMembersName.add("Voir tâches libres");
 
         for(int i = 0; i < familyMembers.size(); i++){
             familyMembersName.add(familyMembers.get(i).getFname());
@@ -143,12 +142,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         mUserSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0){
-                   // getAllTasks();
-                }
-                else{
-                    //getPersonTasks();
-                }
+               reactToSpinner(position);
             }
 
             @Override
@@ -158,7 +152,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         });
     }
 
-    public void getAllTasks(){
+    public void getTasksAndEvents(){
         JSONObject tasksRequest = new JSONObject();
         try {
             tasksRequest.put("familyId", ConnectedUserInfo.getInstance().getFamilyId());
@@ -169,181 +163,47 @@ public class FamilyBoardActivity extends AppCompatActivity {
             @Override
             public void RequestComplete(JSONObject jsonObject) {
                 JSONArray tasks = null;
-                try {
-                    tasks = jsonObject.getJSONArray("tasks");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if(tasks != null){
-                    taskList = new ArrayList<>();
-                    for(int i = 0 ; i < tasks.length(); i++){
-                        try {
-                            JSONObject taskObject = (JSONObject) tasks.get(i);
-                            Task task = new Task(
-                                    taskObject.getInt("id"),
-                                    taskObject.getString("nomTache"),
-                                    taskObject.getInt("nbPointsTache"),
-                                    taskObject.getInt("nbPointsTransfert"),
-                                    taskObject.getString("dateTache"),
-                                    //taskObject.getInt("estFaite"),
-                                    taskObject.getInt("idPersonne"),
-                                    taskObject.getInt("estRecurrente")
-                            );
-                            taskList.add(task);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    FamilyBoardActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            getAllEvents();
-                        }
-                    });
-
-                }
-
-            }
-        };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/allTasks", tasksRequest, eventNotifier)).start();
-    }
-
-    public void getAllEvents(){
-        JSONObject tasksRequest = new JSONObject();
-        try {
-            tasksRequest.put("familyId", ConnectedUserInfo.getInstance().getFamilyId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        IEventNotifier eventNotifier = new IEventNotifier() {
-            @Override
-            public void RequestComplete(JSONObject jsonObject) {
                 JSONArray events = null;
                 try {
+                    tasks = jsonObject.getJSONArray("tasks");
                     events = jsonObject.getJSONArray("events");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if(events != null){
-                    eventList = new ArrayList<>();
-                    for(int i = 0 ; i < events.length(); i++){
-                        try {
-                            JSONObject eventObject = (JSONObject) events.get(i);
-                            Event event = new Event(
-                                    eventObject.getInt("id"),
-                                    eventObject.getString("nomEvenement"),
-                                    eventObject.getString("descriptionEvenement"),
-                                    eventObject.getInt("idPersonne"),
-                                    eventObject.getInt("estRecurrent"),
-                                    eventObject.getString("dateEvenement")
-                            );
-                            eventList.add(event);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    FamilyBoardActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            createClickableAffairs();
-                        }
-                    });
-
-                }
-
-            }
-        };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/allEvents", tasksRequest, eventNotifier)).start();
-    }
-
-    public void getPersonTasks(){
-
-        JSONObject tasksRequest = new JSONObject();
-        try {
-            tasksRequest.put("familyId", ConnectedUserInfo.getInstance().getFamilyId());
-            tasksRequest.put("fName",mUserSpinner.getSelectedItem());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        IEventNotifier eventNotifier = new IEventNotifier() {
-            @Override
-            public void RequestComplete(JSONObject jsonObject) {
-                JSONArray tasks = null;
-                try {
-                    tasks = jsonObject.getJSONArray("personTasks");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if(tasks != null){
-                    taskList = new ArrayList<>();
+                if(tasks != null && events != null){
+                    mTaskList = new ArrayList<>();
+                    mEventList = new ArrayList<>();
                     for(int i = 0 ; i < tasks.length(); i++){
                         try {
                             JSONObject taskObject = (JSONObject) tasks.get(i);
                             Task task = new Task(
-                                    taskObject.getInt("id"),
-                                    taskObject.getString("nomTache"),
-                                    taskObject.getInt("nbPointsTache"),
-                                    taskObject.getInt("nbPointsTransfert"),
-                                    taskObject.getString("dateTache"),
-                                   // taskObject.getInt("estFaite"),
-                                    taskObject.getInt("idPersonne"),
-                                    taskObject.getInt("estRecurrente")
+                                    taskObject.getInt("taskId"),
+                                    taskObject.getString("taskName"),
+                                    taskObject.getInt("points"),
+                                    taskObject.getInt("tPoints"),
+                                    taskObject.getInt("isRecu"),
+                                    taskObject.getInt("persId"),
+                                    taskObject.getString("taskDate"),
+                                    taskObject.getInt("status")
                             );
-                            taskList.add(task);
+                            mTaskList.add(task);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
 
-                    FamilyBoardActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            getPersonEvents();
-                        }
-                    });
-
-                }
-
-            }
-        };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/personTasks", tasksRequest, eventNotifier)).start();
-
-    }
-
-    public void getPersonEvents() {
-
-        JSONObject eventsRequest = new JSONObject();
-        try {
-            eventsRequest.put("familyId", ConnectedUserInfo.getInstance().getFamilyId());
-            eventsRequest.put("fName", mUserSpinner.getSelectedItem());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        IEventNotifier eventNotifier = new IEventNotifier() {
-            @Override
-            public void RequestComplete(JSONObject jsonObject) {
-                JSONArray events = null;
-                try {
-                    events = jsonObject.getJSONArray("personEvents");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (events != null) {
-                    eventList = new ArrayList<>();
-                    for (int i = 0; i < events.length(); i++) {
+                    for(int i = 0 ; i < events.length(); i++){
                         try {
                             JSONObject eventObject = (JSONObject) events.get(i);
                             Event event = new Event(
-                                    eventObject.getInt("id"),
-                                    eventObject.getString("nomEvenement"),
-                                    eventObject.getString("descriptionEvenement"),
-                                    eventObject.getInt("idPersonne"),
-                                    eventObject.getInt("estRecurrent"),
-                                    eventObject.getString("dateEvenement")
+                                    eventObject.getInt("eventId"),
+                                    eventObject.getString("eventName"),
+                                    eventObject.getString("eventDesc"),
+                                    eventObject.getInt("persId"),
+                                    eventObject.getInt("isRecu"),
+                                    eventObject.getString("eventDate")
                             );
-                            eventList.add(event);
+                            mEventList.add(event);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -352,18 +212,69 @@ public class FamilyBoardActivity extends AppCompatActivity {
                     FamilyBoardActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            createClickableAffairs();
+                            filterTasks();
                         }
                     });
-
                 }
-
             }
         };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/personEvents", eventsRequest, eventNotifier)).start();
+        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/getTasksAndEvents", tasksRequest, eventNotifier)).start();
     }
 
-    public void createClickableAffairs(){
+    public void filterTasks(){
+        mFreeTasks = new ArrayList<>();
+        mPersonTasks = new HashMap<>();
+        mPersonEvents = new HashMap<>();
+
+        for(int i = 0; i < mTaskList.size(); i++){
+            Task task = mTaskList.get(i);
+            if(task.personId == -1){
+                mFreeTasks.add(task);
+            }
+            else {
+                List<Task> taskList;
+                if(mPersonTasks.containsKey(task.personId)){
+                    taskList = mPersonTasks.get(task.personId);
+                }
+                else{
+                    taskList = new ArrayList<>();
+                }
+                taskList.add(task);
+                mPersonTasks.put(task.personId, taskList);
+            }
+        }
+
+        for(int i = 0; i < mEventList.size(); i++){
+            Event event = mEventList.get(i);
+            if(event.personId != -1){
+                List<Event> eventList;
+                if(mPersonEvents.containsKey(event.personId)){
+                    eventList = mPersonEvents.get(event.personId);
+                }
+                else{
+                    eventList = new ArrayList<>();
+                }
+                eventList.add(event);
+                mPersonEvents.put(event.personId, eventList);
+            }
+        }
+        reactToSpinner(mUserSpinner.getSelectedItemPosition());
+    }
+
+    public void reactToSpinner(int position){
+        if(position == 0){
+            createClickableAffairs(mTaskList, mEventList);
+        }
+        else if(position == 1) {
+            createClickableAffairs(mFreeTasks, null);
+        }
+        else{
+            int persId = ConnectedUserInfo.getInstance().getFamilyMembers().get(position - 2).getId();
+            createClickableAffairs(mPersonTasks.get(persId), mPersonEvents.get(persId));
+        }
+    }
+
+    public void createClickableAffairs(List<Task> taskList, List<Event> eventList){
         int[] taskLayoutIds = new int[] {
                 R.id.activity_familyBoard_monday,
                 R.id.activity_familyBoard_tuesday,
@@ -378,62 +289,67 @@ public class FamilyBoardActivity extends AppCompatActivity {
             LinearLayout layout = findViewById(taskLayoutIds[i]);
             layout.removeAllViews();
         }
+        if(taskList != null) {
+            for(int i = 0; i < taskList.size(); i++){
+                final Task task = taskList.get(i);
+                if(mCurrentWeek.containsValue(task.taskDate)){
+                    LinearLayout layout = findViewById(taskLayoutIds[task.taskDate.getDayOfWeek().getValue()-1]);
+                    Button btn = new Button(this);
+                    btn.setText(task.taskName);
 
-        for(int i = 0; i < taskList.size(); i++){
-            final Task task = taskList.get(i);
-            if(currentWeek.containsValue(task.taskDate)){
-                LinearLayout layout = findViewById(taskLayoutIds[task.taskDate.getDayOfWeek().getValue()-1]);
-                Button btn = new Button(this);
-                btn.setText(task.taskName);
 
+                    btn.setBackgroundColor(getResources().getColor(R.color.taskButtonColor));
+                    btn.setScaleX(0.8F);
+                    btn.setScaleY(0.8F);
 
-                btn.setBackgroundColor(getResources().getColor(R.color.taskButtonColor));
-                btn.setScaleX(0.8F);
-                btn.setScaleY(0.8F);
-
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent taskDetailActivity = new Intent(FamilyBoardActivity.this, TaskDetailActivity.class);
-                        taskDetailActivity.putExtra("task", task);
-                        startActivity(taskDetailActivity);
-                    }
-                });
-                layout.addView(btn);
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent taskDetailActivity = new Intent(FamilyBoardActivity.this, TaskDetailActivity.class);
+                            taskDetailActivity.putExtra("task", task);
+                            startActivity(taskDetailActivity);
+                        }
+                    });
+                    layout.addView(btn);
+                }
             }
         }
 
-        for(int i = 0; i < eventList.size(); i++){
-            final Event event = eventList.get(i);
-            if(currentWeek.containsValue(event.eventDate)){
-                LinearLayout layout = findViewById(taskLayoutIds[event.eventDate.getDayOfWeek().getValue()-1]);
-                Button btn = new Button(this);
-                btn.setText(event.eventName);
-                btn.setBackgroundColor(getResources().getColor(R.color.eventButtonColor));
-                btn.setScaleX(0.8F);
-                btn.setScaleY(0.8F);
-                btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent eventDetailActivity = new Intent(FamilyBoardActivity.this, TaskDetailActivity.class);
-                        eventDetailActivity.putExtra("event", event);
-                        startActivity(eventDetailActivity);
-                    }
-                });
-                layout.addView(btn);
+        if(eventList != null){
+            for(int i = 0; i < eventList.size(); i++){
+                final Event event = eventList.get(i);
+                if(mCurrentWeek.containsValue(event.eventDate)){
+                    LinearLayout layout = findViewById(taskLayoutIds[event.eventDate.getDayOfWeek().getValue()-1]);
+                    Button btn = new Button(this);
+                    btn.setText(event.eventName);
+                    btn.setBackgroundColor(getResources().getColor(R.color.eventButtonColor));
+                    btn.setScaleX(0.8F);
+                    btn.setScaleY(0.8F);
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent eventDetailActivity = new Intent(FamilyBoardActivity.this, EventDetailActivity.class);
+                            eventDetailActivity.putExtra("event", event);
+                            startActivity(eventDetailActivity);
+                        }
+                    });
+                    layout.addView(btn);
+                }
             }
         }
     }
 
     public void goToNextWeek(){
-        currentWeek = dateHandler.getNextWeek(currentWeek);
+        mCurrentWeek = mDateHandler.getNextWeek(mCurrentWeek);
         fillDates();
-        createClickableAffairs();
+        createClickableAffairs(mTaskList, mEventList);
+        reactToSpinner(mUserSpinner.getSelectedItemPosition());
     }
     public void goToPreviousWeek(){
-        currentWeek = dateHandler.getPreviousWeek(currentWeek);
+        mCurrentWeek = mDateHandler.getPreviousWeek(mCurrentWeek);
         fillDates();
-        createClickableAffairs();
+        createClickableAffairs(mTaskList, mEventList);
+        reactToSpinner(mUserSpinner.getSelectedItemPosition());
     }
 
     public void addTask(){
@@ -445,5 +361,4 @@ public class FamilyBoardActivity extends AppCompatActivity {
         Intent addEventActivity = new Intent(FamilyBoardActivity.this, AddEventActivity.class);
         startActivity(addEventActivity);
     }
-
 }

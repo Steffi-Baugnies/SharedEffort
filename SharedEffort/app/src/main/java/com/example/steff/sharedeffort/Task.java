@@ -14,23 +14,24 @@ public class Task implements Parcelable{
     public String taskName;
     public int points;
     public int pointsForTransfer;
-    public LocalDate taskDate;
-    //public int isDone;
-    public int personId;
     public boolean isRecu;
+    public int personId;
+    public LocalDate taskDate;
+    public int status;
 
-    public Task(int taskId, String taskName, int points, int pointsForTransfer, String taskDate, /*int isDone,*/ int personId, int isRecu){
+    public Task(int taskId, String taskName, int points, int pointsForTransfer, int isRecu, int personId, String taskDate, int status){
         this.taskId = taskId;
         this.taskName = taskName;
         this.points = points;
         this.pointsForTransfer = pointsForTransfer;
+        this.isRecu = isRecu == 1 ? true : false;
+        this.personId = personId;
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z");
         this.taskDate = LocalDate.parse(taskDate, dateTimeFormatter);
 
-        //this.isDone = isDone;
-        this.personId = personId;
-        this.isRecu = isRecu == 1 ? true : false;
+        this.status = status;
+
 
     }
 
@@ -40,9 +41,9 @@ public class Task implements Parcelable{
         points = in.readInt();
         pointsForTransfer = in.readInt();
         taskDate = (LocalDate) in.readSerializable();
-        //isDone = in.readInt();
         personId = in.readInt();
         isRecu = in.readByte() != 0;
+        status = in.readInt();
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -69,8 +70,8 @@ public class Task implements Parcelable{
         dest.writeInt(points);
         dest.writeInt(pointsForTransfer);
         dest.writeSerializable(taskDate);
-        //dest.writeInt(isDone);
         dest.writeInt(personId);
         dest.writeByte((byte)(isRecu?1:0));
+        dest.writeInt(status);
     }
 }
