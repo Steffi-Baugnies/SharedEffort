@@ -57,7 +57,8 @@
         android:id="@+id/activity_addFamilyMember_isAdmin_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_pswd_confirmation">
+        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_pswd_confirmation"
+        android:visibility="visible">
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,12 +71,28 @@
                        />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/activity_addFamilyMember_newAdmin_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Attention, il faudra entrer le mot de passe administrateur pour désigner un nouveau membre administrateur"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_isAdmin_layout"/>
+
+    <TextView
+        android:id="@+id/activity_addFamilyMember_admin_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Attention, ce mot de passe sera le mot de passe administrateur du nouveau tableau !"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_newAdmin_text"/>
+
     <Button
         android:id="@+id/activity_addFamilyMember_validate_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Valider"
-        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_isAdmin_layout"/>
+        app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_admin_text"/>
 
 
 </android.support.constraint.ConstraintLayout>

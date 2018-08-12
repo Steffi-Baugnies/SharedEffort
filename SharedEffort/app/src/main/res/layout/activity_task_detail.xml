@@ -51,13 +51,57 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <TextView
+        android:id="@+id/activity_taskDetail_person_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Personne concernée"
+        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_Date"/>
+    <TextView
+        android:id="@+id/activity_taskDetail_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_person_text"/>
+
     <Button
         android:id="@+id/activity_taskDetail_claimTask_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="S'associer à la tâche"
         android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_Date"/>
+        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_person"/>
 
+    <Button
+        android:id="@+id/activity_taskDetail_transferTask_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="Transférer la tâche"
+        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_claimTask_btn"/>
+
+    <Button
+        android:id="@+id/activity_taskDetail_deleteTask_Btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="Supprimer"
+        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_transferTask_btn"/>
+
+    <Button
+        android:id="@+id/activity_taskDetail_request_validation_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Envoyer une demande de validation"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_deleteTask_Btn"/>
+
+    <Button
+        android:id="@+id/activity_taskDetail_validate_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Valider"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_request_validation_btn"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -64,6 +64,12 @@ public class FamilyBoardActivity extends AppCompatActivity {
         mPreviousWeekBtn = findViewById(R.id.activity_familyBoard_previous_week_btn);
         mNextWeekBtn = findViewById(R.id.activity_familyBoard_next_week_btn);
         mAddTaskBtn = findViewById(R.id.activity_familyBoard_addTask_btn);
+
+        FamilyMember famMember = ConnectedUserInfo.getInstance().getConnectedMember();
+        if(famMember.getAdmin()) {
+            mAddTaskBtn.setVisibility(View.VISIBLE);
+        }
+
         mAddEventBtn = findViewById(R.id.activity_familyBoard_addEvent_btn);
 
         mPreviousWeekBtn.setOnClickListener(new View.OnClickListener() {
@@ -297,10 +303,20 @@ public class FamilyBoardActivity extends AppCompatActivity {
                     Button btn = new Button(this);
                     btn.setText(task.taskName);
 
-
-                    btn.setBackgroundColor(getResources().getColor(R.color.taskButtonColor));
                     btn.setScaleX(0.8F);
                     btn.setScaleY(0.8F);
+
+                    if(task.status == 0) {
+                        btn.setBackgroundColor(getResources().getColor(R.color.toDoTaskColor));
+
+                    }
+                    if(task.status == 1) {
+                        btn.setBackgroundColor(getResources().getColor(R.color.toValidateTaskColor));
+                    }
+                    if(task.status == 2){
+                        btn.setBackgroundColor(getResources().getColor(R.color.doneTaskColor));
+                    }
+
 
                     btn.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -322,7 +338,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
                     LinearLayout layout = findViewById(taskLayoutIds[event.eventDate.getDayOfWeek().getValue()-1]);
                     Button btn = new Button(this);
                     btn.setText(event.eventName);
-                    btn.setBackgroundColor(getResources().getColor(R.color.eventButtonColor));
+                    //btn.setBackgroundColor(getResources().getColor(R.color.eventButtonColor));
                     btn.setScaleX(0.8F);
                     btn.setScaleY(0.8F);
                     btn.setOnClickListener(new View.OnClickListener() {

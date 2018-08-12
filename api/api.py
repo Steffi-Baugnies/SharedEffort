@@ -266,6 +266,94 @@ def claimTask():
 	mysql.connection.commit()
 	return jsonify({'message' : message, 'state' : state})
 
+@app.route('/board/transferTask', methods=["POST"])
+def transferTask():
+	jsonData = request.json
+	taskId = jsonData["taskId"]
+	transferorId = jsonData["transferorId"]
+	transfereeId = jsonData["transfereeId"]
+	substractPoints = jsonData["substractPoints"]
+	cursor = mysql.connection.cursor()
+	cursor.callproc('proc_transferTask', [taskId, transferorId, transfereeId, substractPoints])
+	
+	state = 0
+	
+	for fields in cursor:
+		state = fields[0]
+	if state == 1:
+		message = "La tâche a bien été transférée"
+	else: 
+		message = "Erreur interne veuillez réessayer plus tard"
+	
+	cursor.close()
+	mysql.connection.commit()
+	return jsonify({'message' : message, 'state' : state})
+
+@app.route('/board/deleteTask', methods=["POST"])
+def deleteTask():
+	jsonData = request.json
+	taskId = jsonData["taskId"]
+	cursor = mysql.connection.cursor()
+	cursor.callproc("proc_deleteTask", [taskId])
+	
+	state = 0
+	
+	for fields in cursor: 
+		state = fields[0]
+	if state == 1: 
+		message = "La tâche a bien été supprimée"
+	else:
+		message = "Erreur interne, veuillez réessayer plus tard"
+	
+	cursor.close()
+	mysql.connection.commit()
+	return jsonify({'message' : message, 'state' : state})
+
+@app.route('/board/requestValidation', methods=["POST"])
+def requestValidation():
+	jsonData = request.json
+	taskId = jsonData["taskId"]
+	cursor = mysql.connection.cursor()
+	cursor.callproc('proc_requestValidation', [taskId])
+	state = 0
+	
+	for fields in cursor:
+		state = fields[0]
+	if state == 1: 
+		message = "La demande de validation de la tâche a bien été envoyée"
+	else : 
+		message = "Erreur interne, veuillez réessayer plus tard"
+	
+	cursor.close()
+	mysql.connection.commit()
+	return jsonify({'message' : message, 'state' : state})
+	
+@app.route('/board/validateTask', methods=["POST"])
+def validateTask():
+	jsonData = request.json
+	taskId = jsonData["taskId"]
+	points = jsonData["points"]
+	persId = jsonData["persId"]
+	print(taskId)
+	print(points)
+	print(persId)
+	cursor = mysql.connection.cursor()
+	cursor.callproc('proc_validateTask', [taskId, points, persId])
+	
+	state = 0
+	
+	for fields in cursor:
+		state = fields[0]
+	if state == 1 :
+		message = "La tâche a bien été validée"
+	else :
+		message = "Erreur interne, veuillez réessayer plus tard"
+	print(state)
+	cursor.close()
+	mysql.connection.commit()
+	return jsonify({'message' : message, 'state' : state})
+
+	
 if __name__ == '__main__':
 	app.run(debug=True, threaded=True)
 	app.run(host='0.0.0.0', port = 5000)

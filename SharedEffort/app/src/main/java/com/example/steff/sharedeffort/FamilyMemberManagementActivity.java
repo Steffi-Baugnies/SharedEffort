@@ -111,7 +111,7 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
     public void connectFamilyMember(int index){
         FamilyMember fam  = ConnectedUserInfo.getInstance().getFamilyMembers().get(index);
         if(mUserPswd.equals(fam.getPswd())) {
-            ConnectedUserInfo.getInstance().setConnectedMember(fam.getId());
+            ConnectedUserInfo.getInstance().setConnectedMember(fam);
             Intent familyBoardActivity = new Intent(FamilyMemberManagementActivity.this, FamilyBoardActivity.class);
             startActivity(familyBoardActivity);
         }

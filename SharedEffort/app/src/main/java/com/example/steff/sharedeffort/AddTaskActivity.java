@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +78,7 @@ public class AddTaskActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // to modify
+
         IEventNotifier eventNotifier = new IEventNotifier() {
             @Override
             public void RequestComplete(JSONObject jsonObject) {
