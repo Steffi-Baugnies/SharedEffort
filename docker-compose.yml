@@ -1,0 +1,25 @@
+version: '3.6'
+services:
+  api:
+    image: api/.
+    container_name: api
+    restart: always
+    env_file:
+      - ./api/mysql.env
+    networks:
+      - DMZ
+      - SZ
+#  db:
+ #   image: registry.scpio.net/cust/cdc/easyrepas/easyrepas-db:master
+  #  container_name: er_db
+   # env_file:
+    #  - ./conf/secrets-db.env
+#    volumes:
+#      - ./db/mysql-data:/var/lib/mysql:rw
+ #   networks:
+#      - SZ
+networks:
+  SZ:
+    driver: bridge
+  DMZ:
+    driver: bridge

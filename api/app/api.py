@@ -7,7 +7,6 @@ from flask import request
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
-import db_credentials as config
 import MySQLdb as my
 
 app = Flask(__name__)
@@ -15,10 +14,10 @@ bcrypt = Bcrypt(app)
 CORS(app)
 mysql = MySQL()
 
-app.config['MYSQL_USER'] = config.credentials['user']
-app.config['MYSQL_PASSWORD'] = config.credentials['password']
-app.config['MYSQL_DB'] = config.credentials['database']
-app.config['MYSQL_HOST'] = config.credentials['host']
+app.config['MYSQL_USER'] = os.environ['user']
+app.config['MYSQL_PASSWORD'] = os.environ['password']
+app.config['MYSQL_DB'] = os.environ['database']
+app.config['MYSQL_HOST'] = os.environ['host']
 
 mysql.init_app(app)
 
