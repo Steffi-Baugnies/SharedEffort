@@ -8,6 +8,7 @@ from flask_mysqldb import MySQL
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 import MySQLdb as my
+import os
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -20,6 +21,10 @@ app.config['MYSQL_DB'] = os.environ['database']
 app.config['MYSQL_HOST'] = os.environ['host']
 
 mysql.init_app(app)
+
+@app.route('/system', methods=['GET'])
+def steakinfo():
+	return jsonify({'state': 'up'})
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -354,5 +359,4 @@ def validateTask():
 
 	
 if __name__ == '__main__':
-	app.run(debug=True, threaded=True)
-	app.run(host='0.0.0.0', port = 5000)
+	app.run(host='0.0.0.0', port=80, debug=True)

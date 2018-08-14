@@ -1,5 +1,9 @@
 #Database
 api/db_credentials.py
+mysql/mysql-data/
+
+#Docker
+*.env
 
 # Built application files
 *.apk

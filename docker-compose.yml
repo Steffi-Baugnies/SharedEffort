@@ -1,25 +1,46 @@
 version: '3.6'
 services:
   api:
-    image: api/.
+    build:
+      context: ./api
     container_name: api
-    restart: always
     env_file:
-      - ./api/mysql.env
+      - ./api/secrets-api.env
     networks:
       - DMZ
       - SZ
-#  db:
- #   image: registry.scpio.net/cust/cdc/easyrepas/easyrepas-db:master
-  #  container_name: er_db
-   # env_file:
-    #  - ./conf/secrets-db.env
-#    volumes:
-#      - ./db/mysql-data:/var/lib/mysql:rw
- #   networks:
-#      - SZ
+
+  mysql:
+    build:
+      context: ./mysql
+    container_name: mysql
+    env_file:
+      - ./mysql/secrets-db.env
+    volumes:
+      - ./mysql/mysql-data:/var/lib/mysql:rw
+    ports:
+      - 3306:3306
+    networks:
+      - SZ
+
+  reverse-proxy:
+    image: nginx:1.13
+    container_name: reverse-proxy
+    restart: always
+    volumes:
+      - "./nginx/conf/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "./nginx/sites-enabled/:/etc/nginx/sites-enabled/:ro"
+      - "/etc/letsencrypt/:/etc/letsencrypt/:ro"
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - DMZ
+      - SZ
+
 networks:
   SZ:
     driver: bridge
   DMZ:
     driver: bridge
+

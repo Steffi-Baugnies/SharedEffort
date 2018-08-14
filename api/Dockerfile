@@ -1,9 +1,6 @@
 # Use an official Python runtime as a parent image
 FROM python:3
 
-LABEL "easyRepas.mantainer"="Scorpio Interactive <info@scorpio-interactive.com>"
-LABEL "easyRepas.description"="API's of the easyRepas Project"
-
 # Set the working directory to /app
 WORKDIR /app
 
