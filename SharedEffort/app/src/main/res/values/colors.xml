@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="black">#000000</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="error">#fc5b53</color>
     <color name="taskButtonColor">#7681e8</color>
-    <color name="toDoTaskColor">#e06b64</color>
-    <color name="toValidateTaskColor">#f9b863</color>
-    <color name="doneTaskColor">#42f48f</color>
+    <color name="toDoTaskColor">#ff9f9e</color>
+    <color name="toValidateTaskColor">#ffa71a</color>
+    <color name="doneTaskColor">#c3f28e</color>
+    <color name="logoBottom">#23b5b5</color>
+    <color name="logoMiddleBottom">#b9f8f9</color>
+    <color name="logoMiddleTop">#ffdb2d</color>
+    <color name="logoTop">#ffa71a</color>
+    <color name="textColor">#4a4d54</color>
 </resources>

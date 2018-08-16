@@ -5,14 +5,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:padding="20dp">
 
+    <ImageView
+        android:id="@+id/activity_login_logo"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="20dp"
+        android:layout_height="100dp"
+        android:src="@drawable/sharedeffort_logo" />
     <EditText
         android:id="@+id/activity_login_login_mail_address"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity=""
         android:hint="Adresse e-mail"
-        android:layout_marginTop="30dp"
-        android:text="steffi@baugnies.be"
+        android:layout_marginTop="20dp"
         android:inputType="textEmailAddress"
         />
     <EditText
@@ -21,12 +26,12 @@
         android:layout_height="40dp"
         android:layout_marginTop="15dp"
         android:gravity=""
-        android:text="password"
         android:hint="Mot de passe"
         android:inputType="textPassword"
         />
     <Button
         android:id="@+id/activity_login_login_btn"
+        style="@style/ButtonStyle"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="Se connecter"
@@ -35,6 +40,7 @@
         android:layout_gravity="center_horizontal"
         />
     <Button
+        style="@style/ButtonStyle"
         android:id="@+id/activity_login_register_btn"
         android:layout_width="150dp"
         android:layout_height="wrap_content"

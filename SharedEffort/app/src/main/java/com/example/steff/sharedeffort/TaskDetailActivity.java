@@ -1,6 +1,7 @@
 package com.example.steff.sharedeffort;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,12 +29,14 @@ public class TaskDetailActivity extends AppCompatActivity {
     private TextView mPerson;
     private String mFName;
 
+    private Button mReturn;
     private Button mClaimTaskBtn;
     private Button mTransferTaskBtn;
     private Button mDeleteTaskBtn;
     private Button mRequestValidationBtn;
     private Button mValidateBtn;
     private Task mTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +48,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         mDate = findViewById(R.id.activity_taskDetail_Date);
         mPerson = findViewById(R.id.activity_taskDetail_person);
 
+        mReturn = findViewById(R.id.activity_taskDetail_return_btn);
         mClaimTaskBtn = findViewById(R.id.activity_taskDetail_claimTask_btn);
         mTransferTaskBtn = findViewById(R.id.activity_taskDetail_transferTask_btn);
         mDeleteTaskBtn = findViewById(R.id.activity_taskDetail_deleteTask_Btn);
@@ -60,6 +64,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         getPersonName();
         mPerson.setText(mFName);
+        initReturnBtn();
         initClaimTaskBtn(mTask);
         initTransferTaskBtn(mTask);
         initDeleteTaskBtn();
@@ -73,6 +78,16 @@ public class TaskDetailActivity extends AppCompatActivity {
                 mFName = ConnectedUserInfo.getInstance().getFamilyMembers().get(i).getFname();
             }
         }
+    }
+
+    private void initReturnBtn(){
+        mReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent familyBoardActivity = new Intent(TaskDetailActivity.this, FamilyBoardActivity.class);
+                startActivity(familyBoardActivity);
+            }
+        });
     }
     private void initClaimTaskBtn(final Task task){
         if(task.personId == -1){

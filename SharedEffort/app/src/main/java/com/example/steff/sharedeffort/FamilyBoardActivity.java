@@ -1,13 +1,18 @@
 package com.example.steff.sharedeffort;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -20,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -32,10 +38,10 @@ import java.util.Map;
 public class FamilyBoardActivity extends AppCompatActivity {
 
     private Spinner mUserSpinner;
-    private Button mPreviousWeekBtn;
-    private Button mNextWeekBtn;
-    private Button mAddTaskBtn;
-    private Button mAddEventBtn;
+    private TextView mUserPoints;
+    private ImageButton mPreviousWeekBtn;
+    private ImageButton mNextWeekBtn;
+    private ImageButton mAddBtn;
 
     private List<Task> mTaskList;
     private List<Event> mEventList;
@@ -57,20 +63,18 @@ public class FamilyBoardActivity extends AppCompatActivity {
             toaster.showToast();
         }
 
+        mUserPoints = findViewById(R.id.activity_familyBoard_points);
+        mUserPoints.setText("Points de " + ConnectedUserInfo.getInstance().getConnectedMember().getFname() + " : " + ConnectedUserInfo.getInstance().getConnectedMember().getPoints());
         mDateHandler = new DateHandler();
         mCurrentWeek = mDateHandler.getWeekDates();
         fillDates();
         createSpinner();
         mPreviousWeekBtn = findViewById(R.id.activity_familyBoard_previous_week_btn);
         mNextWeekBtn = findViewById(R.id.activity_familyBoard_next_week_btn);
-        mAddTaskBtn = findViewById(R.id.activity_familyBoard_addTask_btn);
+        mAddBtn = findViewById(R.id.activity_familyBoard_add_btn);
 
         FamilyMember famMember = ConnectedUserInfo.getInstance().getConnectedMember();
-        if(famMember.getAdmin()) {
-            mAddTaskBtn.setVisibility(View.VISIBLE);
-        }
 
-        mAddEventBtn = findViewById(R.id.activity_familyBoard_addEvent_btn);
 
         mPreviousWeekBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,20 +90,9 @@ public class FamilyBoardActivity extends AppCompatActivity {
             }
         });
 
-        mAddTaskBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addTask();
-            }
-        });
-
-        mAddEventBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addEvent();
-            }
-        });
         getTasksAndEvents();
+
+        initAddBtn();
     }
 
     public void onRestart() {
@@ -298,13 +291,14 @@ public class FamilyBoardActivity extends AppCompatActivity {
         if(taskList != null) {
             for(int i = 0; i < taskList.size(); i++){
                 final Task task = taskList.get(i);
-                if(mCurrentWeek.containsValue(task.taskDate)){
+                if(mCurrentWeek.containsValue(task.taskDate.toLocalDate())){
                     LinearLayout layout = findViewById(taskLayoutIds[task.taskDate.getDayOfWeek().getValue()-1]);
                     Button btn = new Button(this);
                     btn.setText(task.taskName);
 
                     btn.setScaleX(0.8F);
                     btn.setScaleY(0.8F);
+                    btn.setTextColor(getResources().getColor(R.color.textColor));
 
                     if(task.status == 0) {
                         btn.setBackgroundColor(getResources().getColor(R.color.toDoTaskColor));
@@ -334,13 +328,19 @@ public class FamilyBoardActivity extends AppCompatActivity {
         if(eventList != null){
             for(int i = 0; i < eventList.size(); i++){
                 final Event event = eventList.get(i);
-                if(mCurrentWeek.containsValue(event.eventDate)){
+                if(mCurrentWeek.containsValue(event.eventDate.toLocalDate())){
                     LinearLayout layout = findViewById(taskLayoutIds[event.eventDate.getDayOfWeek().getValue()-1]);
+
                     Button btn = new Button(this);
                     btn.setText(event.eventName);
                     //btn.setBackgroundColor(getResources().getColor(R.color.eventButtonColor));
                     btn.setScaleX(0.8F);
                     btn.setScaleY(0.8F);
+                    btn.setBackgroundColor(getResources().getColor(R.color.logoBottom));
+                    btn.setTextColor(getResources().getColor(R.color.logoMiddleBottom));
+                    btn.setTextSize(20);
+                    btn.setAllCaps(false);
+                    btn.setPadding(20, 20, 20, 20);
                     btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -353,6 +353,41 @@ public class FamilyBoardActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void initAddBtn(){
+        mAddBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAddChoiceDialog();
+            }
+        });
+    }
+
+    public void openAddChoiceDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.add_choice_dialog, null);
+        builder.setView(dialogView);
+        Button task = dialogView.findViewById(R.id.add_task_btn);
+        if(ConnectedUserInfo.getInstance().getConnectedMember().getAdmin()){
+            task.setVisibility(View.VISIBLE);
+        }
+        task.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTask();
+            }
+        });
+        Button event = dialogView.findViewById(R.id.add_event_btn);
+        event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addEvent();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     public void goToNextWeek(){

@@ -5,39 +5,83 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EventDetailActivity"
-    android:padding="20dp">
+    android:padding="10dp"
+    >
 
     <TextView
         android:id="@+id/activity_eventDetail_eventName_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="false"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:textColor="@color/black"
         android:text="Nom de l'événement"/>
     <TextView
         android:id="@+id/activity_eventDetail_eventName"
         app:layout_constraintTop_toBottomOf="@id/activity_eventDetail_eventName_text"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:focusable="false"/>
     <TextView
         android:id="@+id/activity_eventDetail_eventDescription_text"
         app:layout_constraintTop_toBottomOf="@id/activity_eventDetail_eventName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="false"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:textColor="@color/black"
         android:text="Description de l'événement"/>
     <TextView
         android:id="@+id/activity_eventDetail_eventDescription"
         app:layout_constraintTop_toBottomOf="@id/activity_eventDetail_eventDescription_text"
         android:layout_width="wrap_content"
+        android:focusable="false"
+        android:padding="10dp"
         android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/activity_eventDetail_eventDate_text"
         app:layout_constraintTop_toBottomOf="@id/activity_eventDetail_eventDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Date de l'événement"/>
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:text="Date et heure de l'événement"/>
     <TextView
         android:id="@+id/activity_eventDetail_eventDate"
         app:layout_constraintTop_toBottomOf="@id/activity_eventDetail_eventDate_text"
         android:layout_width="wrap_content"
+        android:focusable="false"
+        android:padding="10dp"
         android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/activity_eventDetail_person_text"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@+id/activity_eventDetail_eventDate"
+        android:text="Personne concernée"/>
+    <TextView
+        android:id="@+id/activity_eventDetail_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/activity_eventDetail_person_text"
+        />
+
+    <Button
+        android:id="@+id/activity_eventDetail_return_btn"
+        style="@style/ButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Retour"
+        app:layout_constraintTop_toBottomOf="@+id/activity_eventDetail_person"/>
 
 </android.support.constraint.ConstraintLayout>

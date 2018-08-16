@@ -7,37 +7,28 @@
     tools:context=".AddEventActivity"
     android:padding="20dp">
 
-    <TextView
-        android:id="@+id/activity_addEvent_eventName_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nom de l'événement"/>
 
     <EditText
         android:id="@+id/activity_addEvent_eventName"
-        android:layout_width="200dp"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activity_addEvent_eventName_text"/>
-
-    <TextView
-        android:id="@+id/activity_addEvent_eventDesc_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description de l'événement"
-        app:layout_constraintTop_toBottomOf="@id/activity_addEvent_eventName"/>
+        android:hint="Nom de l'événement"/>
 
     <EditText
         android:id="@+id/activity_addEvent_eventDesc"
-        android:layout_width="200dp"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activity_addEvent_eventDesc_text"/>
+        android:hint="Description"
+        app:layout_constraintTop_toBottomOf="@id/activity_addEvent_eventName"/>
 
     <TextView
         android:id="@+id/activity_addEvent_datePicker_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date et heure de l'événement"
-        app:layout_constraintTop_toBottomOf="@id/activity_addEvent_eventDesc"/>
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/activity_addEvent_eventDesc"
+        android:focusable="false"/>
 
     <DatePicker
         android:id="@+id/activity_addEvent_datePicker"
@@ -56,11 +47,18 @@
         android:timePickerMode="spinner"
         app:layout_constraintTop_toBottomOf="@+id/activity_addEvent_datePicker"/>
 
+    <TextView
+        android:id="@+id/activity_addEvent_person_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Personne concernée"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addEvent_timePicker"/>
     <Spinner
         android:id="@+id/activity_addEvent_userSpinner"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/activity_addEvent_timePicker"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addEvent_person_text"
         android:layout_margin="10dp"/>
 
     <LinearLayout
@@ -74,6 +72,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="La tâche est-elle récurente ?"
+            android:textSize="18sp"
+            android:focusable="false"
             />
 
         <android.support.v7.widget.AppCompatCheckBox
@@ -85,6 +85,7 @@
     </LinearLayout>
 
     <Button
+        style="@style/ButtonStyle"
         android:id="@+id/activity_addEvent_validate_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

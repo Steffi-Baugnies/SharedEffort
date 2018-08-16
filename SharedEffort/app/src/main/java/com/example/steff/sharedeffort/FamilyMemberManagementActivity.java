@@ -70,7 +70,15 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
 
         for(int i = 0; i < familyMembers.size(); i++){
             Button btn = new Button(this);
+            btn.setScaleX(0.8F);
+            btn.setScaleY(0.8F);
             btn.setText(familyMembers.get(i).getFname());
+            btn.setBackgroundColor(getResources().getColor(R.color.logoBottom));
+            btn.setTextColor(getResources().getColor(R.color.logoMiddleBottom));
+            btn.setTextSize(20);
+            btn.setAllCaps(false);
+            btn.setPadding(20, 20, 20, 20);
+
             mClickableFamilyMembers.addView(btn);
 
 

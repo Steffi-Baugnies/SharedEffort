@@ -7,50 +7,28 @@
     tools:context=".AddTaskActivity"
     android:padding="20dp">
 
-    <TextView
-        android:id="@+id/activity_addTask_taskName_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nom de la tâche"/>
-
     <EditText
         android:id="@+id/activity_addTask_taskName"
-        android:layout_width="200dp"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_taskName_text"
-        />
-
-    <TextView
-        android:id="@+id/activity_addTask_points_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nombre de points que vaut la tâche"
-        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_taskName"
+        android:hint="Nom de la tâche"
         />
 
     <EditText
         android:id="@+id/activity_addTask_points"
-        android:layout_width="200dp"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:inputType="numberSigned"
-        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_points_text"
-        android:hint="0"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_taskName"
+        android:hint="Nombre de points de vaut la tâche"
         />
-
-    <TextView
-        android:id="@+id/activity_addTask_pointsForTransfer_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="numberSigned"
-        android:text="Nombre de points nécessaires pour le transfert"
-        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_points"/>
 
     <EditText
         android:id="@+id/activity_addTask_pointsForTransfer"
-        android:layout_width="200dp"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_pointsForTransfer_text"
-        android:hint="0"
+        app:layout_constraintTop_toBottomOf="@+id/activity_addTask_points"
+        android:hint="Nombre de points pour le transfert"
         />
 
     <TextView
@@ -58,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date et heure de la tâche"
+        android:focusable="false"
         app:layout_constraintTop_toBottomOf="@+id/activity_addTask_pointsForTransfer"/>
 
     <DatePicker
@@ -80,6 +59,7 @@
         android:id="@+id/activity_addTask_person_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="false"
         android:text="Personne concernée"
         app:layout_constraintTop_toBottomOf="@+id/activity_addTask_timePicker"
         />
@@ -101,6 +81,7 @@
             android:id="@+id/activity_addTask_recurrence_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:text="La tâche est-elle récurente ?"
             />
 
@@ -114,6 +95,7 @@
 
     <Button
         android:id="@+id/activity_addTask_validateBtn"
+        style="@style/ButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Valider"

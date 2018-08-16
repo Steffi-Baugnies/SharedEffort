@@ -3,8 +3,14 @@ package com.example.steff.sharedeffort;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
 
 public class Event implements Parcelable{
     public int eventId;
@@ -12,18 +18,16 @@ public class Event implements Parcelable{
     public String eventDescription;
     public int personId;
     public Boolean isRecu;
-    public LocalDate eventDate;
+    public LocalDateTime eventDate;
 
     public Event(int eventId, String eventName, String eventDescription, int personId, int isRecu, String eventDate){
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.personId = personId;
-
         this.isRecu = isRecu == 1 ? true : false;
-
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z");
-        this.eventDate = LocalDate.parse(eventDate, dateTimeFormatter);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss z");
+        this.eventDate = LocalDateTime.parse(eventDate, dateTimeFormatter);
     }
 
     protected Event(Parcel in) {
@@ -32,7 +36,7 @@ public class Event implements Parcelable{
         eventDescription = in.readString();
         personId = in.readInt();
         isRecu = in.readByte() != 0;
-        eventDate = (LocalDate) in.readSerializable();
+        eventDate = (LocalDateTime) in.readSerializable();
     }
 
     public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {

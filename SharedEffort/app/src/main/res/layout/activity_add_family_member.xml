@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date de naissance"
+        android:focusable="false"
         app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_lname" />
 
     <DatePicker
@@ -63,6 +64,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:text="L'utilisateur aura-t-il les droits d'administrateur ? "/>
         <CheckBox
             android:id="@+id/activity_addFamilyMember_isAdmin"
@@ -75,6 +77,7 @@
         android:id="@+id/activity_addFamilyMember_newAdmin_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="false"
         android:text="Attention, il faudra entrer le mot de passe administrateur pour désigner un nouveau membre administrateur"
         android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_isAdmin_layout"/>
@@ -83,12 +86,14 @@
         android:id="@+id/activity_addFamilyMember_admin_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:focusable="false"
         android:text="Attention, ce mot de passe sera le mot de passe administrateur du nouveau tableau !"
         android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_newAdmin_text"/>
 
     <Button
         android:id="@+id/activity_addFamilyMember_validate_btn"
+        style="@style/ButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Valider"

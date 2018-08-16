@@ -8,21 +8,21 @@
 
     <EditText
         android:id="@+id/activity_register_mailAddress"
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:hint="Adresse mail"
         android:inputType="textEmailAddress"
         />
     <EditText
         android:id="@+id/activity_register_password"
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:hint="Mot de passe (min. 8 caractères)"
         app:layout_constraintTop_toBottomOf="@+id/activity_register_mailAddress"/>
     <EditText
         android:id="@+id/activity_register_passwordConfirmation"
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:hint="Confirmation du mot de passe"
@@ -30,12 +30,13 @@
 
     <EditText
         android:id="@+id/activity_register_familyName"
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:hint="Nom de la famille"
         app:layout_constraintTop_toBottomOf="@+id/activity_register_passwordConfirmation"/>
     <Button
         android:id="@+id/activity_register_register_btn"
+        style="@style/ButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Créer un compte"

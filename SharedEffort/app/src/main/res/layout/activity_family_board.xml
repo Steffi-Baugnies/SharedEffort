@@ -7,230 +7,246 @@
     tools:context=".FamilyBoardActivity"
     android:padding="20dp">
 
-    <Spinner
-        android:id="@+id/activity_familyBoard_userSpinner"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"/>
-
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/activity_familyBoard_table"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/activity_familyBoard_top"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activity_familyBoard_userSpinner"
-        android:stretchColumns="1">
+        android:orientation="horizontal">
+        <Spinner
+            android:id="@+id/activity_familyBoard_userSpinner"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/activity_familyBoard_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text=""/>
 
-        <TableRow>
+    </RelativeLayout>
 
-            <TextView
-                android:layout_width="50dp"
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="Lundi"
-                android:textSize="20dp"/>
-            <LinearLayout
-                android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_monday"
-                >
+    <ScrollView
+        android:id="@+id/activity_familyBoard_scrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="410dp"
+        app:layout_constraintTop_toBottomOf="@+id/activity_familyBoard_top">
 
-            </LinearLayout>
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/activity_familyBoard_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/activity_familyBoard_top"
+            android:stretchColumns="1">
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_column="1"
+                    android:padding="3dip"
+                    android:text="Lundi"
+                    android:textSize="20dp"/>
 
 
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/activity_familyBoard_monday_text"
-                android:padding="3dip"
-                android:layout_column="1"
-                android:textSize="10dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:id="@+id/activity_familyBoard_monday"
+                    >
+                </LinearLayout>
+
+
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/activity_familyBoard_monday_text"
+                    android:padding="3dip"
+                    android:layout_column="1"
+                    android:textSize="10dp"
+                    />
+            </TableRow>
+            <TableRow>
+
+                <TextView
+                    android:layout_column="1"
+                    android:padding="3dip"
+                    android:text="Mardi"
+                    android:textSize="20dp"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:id="@+id/activity_familyBoard_tuesday"
+                    >
+
+                </LinearLayout>
+
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/activity_familyBoard_tuesday_text"
+                    android:padding="3dip"
+                    android:layout_column="1"
+                    android:textSize="10dp"
+                    />
+            </TableRow>
+            <TableRow>
+
+                <TextView
+                    android:layout_column="1"
+                    android:padding="3dip"
+                    android:text="Mercredi"
+                    android:textSize="20dp"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:id="@+id/activity_familyBoard_wednesday"
+                    >
+
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/activity_familyBoard_wednesday_text"
+                    android:padding="3dip"
+                    android:layout_column="1"
+                    android:textSize="10dp"
+                    />
+            </TableRow>
+            <TableRow>
+
+                <TextView
+                    android:layout_column="1"
+                    android:padding="3dip"
+                    android:text="Jeudi"
+                    android:textSize="20dp"/>
+
+                <LinearLayout
+                    android:layout_width="200dp"
+                    android:orientation="horizontal"
+                    android:id="@+id/activity_familyBoard_thursday"
+                    >
+
+                </LinearLayout>
+
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/activity_familyBoard_thursday_text"
+                    android:padding="3dip"
+                    android:layout_column="1"
+                    android:textSize="10dp"
+                    />
+            </TableRow>
+            <TableRow>
+
+                <TextView
+                    android:layout_column="1"
+                    android:padding="3dip"
+                    android:text="Vendredi"
+                    android:textSize="20dp"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:id="@+id/activity_familyBoard_friday"
+                    >
+
+                </LinearLayout>
+
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/activity_familyBoard_friday_text"
+                    android:padding="3dip"
+                    android:layout_column="1"
+                    android:textSize="10dp"
+                    />
+            </TableRow>
+            <TableRow>
+
+                <TextView
+                    android:layout_column="1"
+                    android:padding="3dip"
+                    android:text="Samedi"
+                    android:textSize="20dp"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:id="@+id/activity_familyBoard_saturday"
+                    >
+
+                </LinearLayout>
+
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/activity_familyBoard_saturday_text"
+                    android:padding="3dip"
+                    android:layout_column="1"
+                    android:textSize="10dp"
+                    />
+            </TableRow>
+            <TableRow>
+
+                <TextView
+                    android:layout_column="1"
+                    android:padding="3dip"
+                    android:text="Dimanche"
+                    android:textSize="20dp"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:id="@+id/activity_familyBoard_sunday"
+                    >
+
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/activity_familyBoard_sunday_text"
+                    android:padding="3dip"
+                    android:layout_column="1"
+                    android:textSize="10dp"
+                    />
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/activity_familyBoard_week_btns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+            <ImageButton
+                android:id="@+id/activity_familyBoard_previous_week_btn"
+                style="@style/ButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                android:src="@drawable/previous"
                 />
-        </TableRow>
-        <TableRow>
 
-            <TextView
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="Mardi"
-                android:textSize="20dp"/>
+            <ImageButton
+                android:id="@+id/activity_familyBoard_add_btn"
+                style="@style/ButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/add"
+                android:layout_marginTop="17dp"
+                android:layout_centerHorizontal="true"
+                />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_tuesday"
-                >
+            <ImageButton
+                android:id="@+id/activity_familyBoard_next_week_btn"
+                style="@style/ButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                android:src="@drawable/next"
+                android:layout_alignParentRight="true"
+                />
 
-            </LinearLayout>
-
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/activity_familyBoard_tuesday_text"
-                android:padding="3dip"
-                android:layout_column="1"
-                android:textSize="10dp"
-            />
-        </TableRow>
-        <TableRow>
-
-            <TextView
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="Mercredi"
-                android:textSize="20dp"/>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_wednesday"
-                >
-
-            </LinearLayout>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/activity_familyBoard_wednesday_text"
-                android:padding="3dip"
-                android:layout_column="1"
-                android:textSize="10dp"
-            />
-        </TableRow>
-        <TableRow>
-
-            <TextView
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="Jeudi"
-                android:textSize="20dp"/>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_thursday"
-                >
-
-            </LinearLayout>
-
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/activity_familyBoard_thursday_text"
-                android:padding="3dip"
-                android:layout_column="1"
-                android:textSize="10dp"
-            />
-        </TableRow>
-        <TableRow>
-
-            <TextView
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="Vendredi"
-                android:textSize="20dp"/>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_friday"
-                >
-
-            </LinearLayout>
-
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/activity_familyBoard_friday_text"
-                android:padding="3dip"
-                android:layout_column="1"
-                android:textSize="10dp"
-            />
-        </TableRow>
-        <TableRow>
-
-            <TextView
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="Samedi"
-                android:textSize="20dp"/>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_saturday"
-                >
-
-            </LinearLayout>
-
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/activity_familyBoard_saturday_text"
-                android:padding="3dip"
-                android:layout_column="1"
-                android:textSize="10dp"
-            />
-        </TableRow>
-        <TableRow>
-
-            <TextView
-                android:layout_column="1"
-                android:padding="3dip"
-                android:text="Dimanche"
-                android:textSize="20dp"/>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:id="@+id/activity_familyBoard_sunday"
-                >
-
-            </LinearLayout>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:id="@+id/activity_familyBoard_sunday_text"
-                android:padding="3dip"
-                android:layout_column="1"
-                android:textSize="10dp"
-            />
-        </TableRow>
-    </TableLayout>
-    <LinearLayout
-        android:id="@+id/activity_familyBoard_week_btns"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activity_familyBoard_table"
-        >
-
-        <Button
-            android:id="@+id/activity_familyBoard_previous_week_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Semaine précédente"
-            />
-        <Button
-            android:id="@+id/activity_familyBoard_next_week_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Semaine prochaine"
-            />
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/activity_familyBoard_week_btns">
-
-        <Button
-            android:id="@+id/activity_familyBoard_addTask_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:text="Ajouter une tâche"
-
-            />
-        <Button
-            android:id="@+id/activity_familyBoard_addEvent_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="10dp"
-            android:text="Ajouter un événement"/>
-    </LinearLayout>
-
-
-
-
-
+        </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
