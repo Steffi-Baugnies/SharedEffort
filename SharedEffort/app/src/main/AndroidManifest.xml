@@ -14,25 +14,35 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
         <activity
             android:name=".LoginActivity"
             android:exported="true"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".FamilyBoardActivity" />
-        <activity android:name=".TaskDetailActivity" />
-        <activity android:name=".AddTaskActivity" />
-        <activity android:name=".AddEventActivity" />
-        <activity android:name=".EventDetailActivity" />
-        <activity android:name=".FamilyMemberManagementActivity" />
-        <activity android:name=".AddFamilyMemberActivity"></activity>
+        <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FamilyBoardActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".TaskDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AddTaskActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AddEventActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EventDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FamilyMemberManagementActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AddFamilyMemberActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

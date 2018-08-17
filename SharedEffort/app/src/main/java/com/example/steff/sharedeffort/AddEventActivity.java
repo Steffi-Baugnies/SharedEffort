@@ -117,7 +117,7 @@ public class AddEventActivity extends AppCompatActivity {
                 }
             }
         };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/addEvent", event, eventNotifier)).start();
+        new Thread(new ApiRequestHandler("board/addEvent", event, eventNotifier)).start();
 
     }
 }

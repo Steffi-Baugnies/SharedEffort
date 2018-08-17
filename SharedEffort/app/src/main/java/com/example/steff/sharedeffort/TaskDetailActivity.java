@@ -134,7 +134,7 @@ public class TaskDetailActivity extends AppCompatActivity {
 
                     }
                 };
-                new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/claimTask", userTaskInfo, eventNotifier)).start();
+                new Thread(new ApiRequestHandler("board/claimTask", userTaskInfo, eventNotifier)).start();
             }
         });
 
@@ -235,7 +235,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 }
             }
         };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/transferTask", transfer, eventNotifier)).start();
+        new Thread(new ApiRequestHandler( "board/transferTask", transfer, eventNotifier)).start();
     }
 
     private void initDeleteTaskBtn(){
@@ -308,7 +308,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 }
             }
         };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/deleteTask", delete, eventNotifier)).start();
+        new Thread(new ApiRequestHandler("board/deleteTask", delete, eventNotifier)).start();
     }
 
     private void initRequestValidationBtn(){
@@ -360,7 +360,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 });
             }
         };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/requestValidation", requestValidation, eventNotifier)).start();
+        new Thread(new ApiRequestHandler( "board/requestValidation", requestValidation, eventNotifier)).start();
     }
 
     private void initValidateBtn(){
@@ -421,7 +421,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                 });
             }
         };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/validateTask", validate, eventNotifier)).start();
+        new Thread(new ApiRequestHandler("board/validateTask", validate, eventNotifier)).start();
     }
 }
 

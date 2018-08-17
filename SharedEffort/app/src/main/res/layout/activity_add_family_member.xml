@@ -4,17 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddFamilyMemberActivity">
+    tools:context=".AddFamilyMemberActivity"
+    android:padding="20dp">
 
     <EditText
         android:id="@+id/activity_addFamilyMember_fname"
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:hint="Prénom"/>
 
     <EditText
         android:id="@+id/activity_addFamilyMember_lname"
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:hint="Nom de Famille"
         app:layout_constraintTop_toBottomOf="@+id/activity_addFamilyMember_fname"
@@ -40,7 +41,7 @@
 
     <EditText
         android:id="@+id/activity_addFamilyMember_pswd"
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:hint="Mot de passe"
         android:inputType="textPassword"
@@ -48,7 +49,7 @@
 
     <EditText
         android:id="@+id/activity_addFamilyMember_pswd_confirmation"
-        android:layout_width="wrap_content"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:hint="Confirmation du mot de passe"
         android:inputType="textPassword"

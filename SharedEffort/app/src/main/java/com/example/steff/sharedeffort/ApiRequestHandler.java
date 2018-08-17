@@ -17,7 +17,7 @@ public class ApiRequestHandler extends Thread{
     private String route;
     private JSONObject jsonObject;
     private IEventNotifier eventNotifier;
-    public ApiRequestHandler(String baseURL, String route, JSONObject jsonObject, IEventNotifier eventNotifier){
+    public ApiRequestHandler(String route, JSONObject jsonObject, IEventNotifier eventNotifier){
         this.baseURL = "https://se.scpio.net/api";
         this.route = route;
         this.jsonObject = jsonObject;

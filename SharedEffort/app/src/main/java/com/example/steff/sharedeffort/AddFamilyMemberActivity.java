@@ -78,12 +78,19 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if(mIsAdmin.isChecked()) {
-                    openPasswordDialog();
+                System.out.println("Steak : " + ConnectedUserInfo.getInstance().getFamilyMembers().size());
+                if(ConnectedUserInfo.getInstance().getFamilyMembers().size() != 0) {
+                    if(mIsAdmin.isChecked()) {
+                        openPasswordDialog();
+                    }
+                    else{
+                        addUser();
+                    }
                 }
-                else{
+                else {
                     addUser();
                 }
+
             }
         });
     }
@@ -156,7 +163,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         }
                     }
                 };
-                new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "addFamilyMember", newMember, eventNotifier)).start();
+                new Thread(new ApiRequestHandler("addFamilyMember", newMember, eventNotifier)).start();
             }
             else {
                 message = "Les mots de passe sont différents";

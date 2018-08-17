@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     };
-                    new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "login", credentials, eventNotifier)).start();
+                    new Thread(new ApiRequestHandler("login", credentials, eventNotifier)).start();
                 }
                 else{
                     setErrorMessage("Veuillez entrer vos informations de connexion");

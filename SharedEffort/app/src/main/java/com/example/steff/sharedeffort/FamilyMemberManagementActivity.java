@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import org.json.JSONArray;
@@ -23,12 +24,14 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
     private Button mAddMemberBtn;
     private LinearLayout mClickableFamilyMembers;
     private String mUserPswd;
+    private ImageButton mLogoutBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_family_member_management);
 
         mAddMemberBtn = findViewById(R.id.activity_familyMemberManagement_addUser_btn);
+        mLogoutBtn = findViewById(R.id.activity_familyMemberManagement_logout_btn);
 
         initAddMemberBtn();
 
@@ -39,6 +42,7 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
         }
 
         getFamilyMembersInfo();
+        initLogoutBtn();
 
     }
 
@@ -58,6 +62,16 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent addFamilyMemberActivity = new Intent(FamilyMemberManagementActivity.this, AddFamilyMemberActivity.class);
                 startActivity(addFamilyMemberActivity);
+            }
+        });
+    }
+
+    private void initLogoutBtn(){
+        mLogoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent loginActivity = new Intent(FamilyMemberManagementActivity.this, LoginActivity.class);
+                startActivity(loginActivity);
             }
         });
     }
@@ -176,7 +190,7 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
             }
         };
 
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/familyMembersInfo", family, eventNotifier)).start();
+        new Thread(new ApiRequestHandler("board/familyMembersInfo", family, eventNotifier)).start();
 
     }
 }

@@ -97,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                 }
                             };
-                            new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "register", jsonObject, eventNotifier)).start();
+                            new Thread(new ApiRequestHandler("register", jsonObject, eventNotifier)).start();
                         }
                         else {
 

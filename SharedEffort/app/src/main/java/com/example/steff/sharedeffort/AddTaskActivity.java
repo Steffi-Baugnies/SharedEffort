@@ -101,7 +101,7 @@ public class AddTaskActivity extends AppCompatActivity {
                 }
             }
         };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/addTask", task, eventNotifier)).start();
+        new Thread(new ApiRequestHandler("board/addTask", task, eventNotifier)).start();
 
     }
 

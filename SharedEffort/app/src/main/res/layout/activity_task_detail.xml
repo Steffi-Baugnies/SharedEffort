@@ -99,15 +99,6 @@
 
     </ScrollView>
 
-
-    <Button
-        android:id="@+id/activity_taskDetail_return_btn"
-        style="@style/ButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_scrollView"
-        android:text="Retour"/>
-
     <Button
         android:id="@+id/activity_taskDetail_claimTask_btn"
         style="@style/ButtonStyle"
@@ -115,7 +106,7 @@
         android:layout_height="wrap_content"
         android:text="S'associer à la tâche"
         android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_return_btn"/>
+        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_scrollView"/>
 
     <Button
         android:id="@+id/activity_taskDetail_transferTask_btn"
@@ -152,6 +143,14 @@
         android:text="Valider"
         android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_request_validation_btn"/>
+
+    <Button
+        android:id="@+id/activity_taskDetail_return_btn"
+        style="@style/ButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/activity_taskDetail_validate_btn"
+        android:text="Retour"/>
 
 
 

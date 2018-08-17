@@ -27,6 +27,7 @@
         android:id="@+id/activity_addTask_pointsForTransfer"
         android:layout_width="340dp"
         android:layout_height="wrap_content"
+        android:inputType="numberSigned"
         app:layout_constraintTop_toBottomOf="@+id/activity_addTask_points"
         android:hint="Nombre de points pour le transfert"
         />

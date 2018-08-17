@@ -42,6 +42,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
     private ImageButton mPreviousWeekBtn;
     private ImageButton mNextWeekBtn;
     private ImageButton mAddBtn;
+    private ImageButton mLogoutBtn;
 
     private List<Task> mTaskList;
     private List<Event> mEventList;
@@ -64,7 +65,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         }
 
         mUserPoints = findViewById(R.id.activity_familyBoard_points);
-        mUserPoints.setText("Points de " + ConnectedUserInfo.getInstance().getConnectedMember().getFname() + " : " + ConnectedUserInfo.getInstance().getConnectedMember().getPoints());
+        mUserPoints.setText(ConnectedUserInfo.getInstance().getConnectedMember().getFname() + " : " + ConnectedUserInfo.getInstance().getConnectedMember().getPoints());
         mDateHandler = new DateHandler();
         mCurrentWeek = mDateHandler.getWeekDates();
         fillDates();
@@ -72,6 +73,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         mPreviousWeekBtn = findViewById(R.id.activity_familyBoard_previous_week_btn);
         mNextWeekBtn = findViewById(R.id.activity_familyBoard_next_week_btn);
         mAddBtn = findViewById(R.id.activity_familyBoard_add_btn);
+        mLogoutBtn = findViewById(R.id.activity_familyBoard_logout_btn);
 
         FamilyMember famMember = ConnectedUserInfo.getInstance().getConnectedMember();
 
@@ -91,8 +93,8 @@ public class FamilyBoardActivity extends AppCompatActivity {
         });
 
         getTasksAndEvents();
-
         initAddBtn();
+        initLogoutBtn();
     }
 
     public void onRestart() {
@@ -217,7 +219,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
                 }
             }
         };
-        new Thread(new ApiRequestHandler("http://10.0.2.2:5000", "board/getTasksAndEvents", tasksRequest, eventNotifier)).start();
+        new Thread(new ApiRequestHandler("board/getTasksAndEvents", tasksRequest, eventNotifier)).start();
     }
 
     public void filterTasks(){
@@ -373,12 +375,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         if(ConnectedUserInfo.getInstance().getConnectedMember().getAdmin()){
             task.setVisibility(View.VISIBLE);
         }
-        task.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addTask();
-            }
-        });
+
         Button event = dialogView.findViewById(R.id.add_event_btn);
         event.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -386,8 +383,25 @@ public class FamilyBoardActivity extends AppCompatActivity {
                 addEvent();
             }
         });
-        AlertDialog alertDialog = builder.create();
+        final AlertDialog alertDialog = builder.create();
+        task.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+                addTask();
+            }
+        });
         alertDialog.show();
+    }
+
+    public void initLogoutBtn(){
+        mLogoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent familyMemberManagementActivity = new Intent(FamilyBoardActivity.this, FamilyMemberManagementActivity.class);
+                startActivity(familyMemberManagementActivity);
+            }
+        });
     }
 
     public void goToNextWeek(){
