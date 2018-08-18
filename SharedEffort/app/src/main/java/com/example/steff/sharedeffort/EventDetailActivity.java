@@ -30,7 +30,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
         mEventName.setText(event.eventName);
         mEventDescription.setText("" + event.eventDescription);
-        mDate.setText("" + event.eventDate);
+        mDate.setText(event.eventDate.toString().replace("T", " "));
 
         mReturn = findViewById(R.id.activity_eventDetail_return_btn);
         System.out.println("steak : " + event.eventDate);

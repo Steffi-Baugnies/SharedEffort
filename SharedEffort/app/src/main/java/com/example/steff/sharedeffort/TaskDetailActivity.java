@@ -60,7 +60,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         mTaskName.setText(mTask.taskName);
         mPoints.setText("" + mTask.points);
         mPointsForTransfer.setText("" + mTask.pointsForTransfer);
-        mDate.setText(mTask.taskDate.toString());
+        mDate.setText(mTask.taskDate.toString().replace("T", " "));
 
         getPersonName();
         mPerson.setText(mFName);
@@ -99,7 +99,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 JSONObject userTaskInfo = new JSONObject();
                 try {
-                    userTaskInfo.put("persId", ConnectedUserInfo.getInstance().getConnectedMember());
+                    userTaskInfo.put("persId", ConnectedUserInfo.getInstance().getConnectedMember().getId());
                     userTaskInfo.put("taskId", task.taskId);
                 } catch (JSONException e) {
                     e.printStackTrace();
