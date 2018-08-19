@@ -87,6 +87,7 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
             btn.setScaleX(0.8F);
             btn.setScaleY(0.8F);
             btn.setText(familyMembers.get(i).getFname());
+            btn.setWidth(800);
             btn.setBackgroundColor(getResources().getColor(R.color.logoBottom));
             btn.setTextColor(getResources().getColor(R.color.logoMiddleBottom));
             btn.setTextSize(20);

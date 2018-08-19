@@ -40,6 +40,7 @@ public class AddEventActivity extends AppCompatActivity {
         mEventDescription = findViewById(R.id.activity_addEvent_eventDesc);
         mDatePicker = findViewById(R.id.activity_addEvent_datePicker);
         mTimePicker = findViewById(R.id.activity_addEvent_timePicker);
+        mTimePicker.setIs24HourView(true);
         mUserSpinner = findViewById(R.id.activity_addEvent_userSpinner);
         mRecurrence = findViewById(R.id.activity_addEvent_recurrence);
 

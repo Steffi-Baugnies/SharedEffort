@@ -221,8 +221,12 @@ public class TaskDetailActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if(state == 1){
+                    ConnectedUserInfo.getInstance().getConnectedMember().setPoints(ConnectedUserInfo.getInstance().getConnectedMember().getPoints() - mTask.pointsForTransfer);
                     PreviousToast.getInstance().setMessage(message);
+                    Intent familyBoardActivity = new Intent(TaskDetailActivity.this, FamilyBoardActivity.class);
                     finish();
+                    startActivity(familyBoardActivity);
+
                 }else{
                     final String finalMessage = message;
                     runOnUiThread(new Runnable() {

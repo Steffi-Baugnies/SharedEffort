@@ -300,6 +300,8 @@ public class FamilyBoardActivity extends AppCompatActivity {
 
                     btn.setScaleX(0.8F);
                     btn.setScaleY(0.8F);
+                    btn.setAllCaps(false);
+                    btn.setTextSize(19);
                     btn.setTextColor(getResources().getColor(R.color.textColor));
 
                     if(task.status == 0) {
@@ -375,15 +377,15 @@ public class FamilyBoardActivity extends AppCompatActivity {
         if(ConnectedUserInfo.getInstance().getConnectedMember().getAdmin()){
             task.setVisibility(View.VISIBLE);
         }
-
+        final AlertDialog alertDialog = builder.create();
         Button event = dialogView.findViewById(R.id.add_event_btn);
         event.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alertDialog.cancel();
                 addEvent();
             }
         });
-        final AlertDialog alertDialog = builder.create();
         task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

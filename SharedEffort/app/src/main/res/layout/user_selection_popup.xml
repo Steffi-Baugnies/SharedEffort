@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:text="Sélectionner la personne a qui transférer la tâche"/>
+        android:text="Sélectionner la personne à qui transférer la tâche"/>
     <Spinner
         android:id="@+id/user_selection_popup_spinner"
         android:layout_width="wrap_content"

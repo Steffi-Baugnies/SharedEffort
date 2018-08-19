@@ -71,7 +71,7 @@
             android:id="@+id/activity_addEvent_recurrence_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="La tâche est-elle récurente ?"
+            android:text="L'événement est-il récurrent ?"
             android:textSize="18sp"
             android:focusable="false"
             />

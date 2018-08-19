@@ -108,7 +108,7 @@ public class AddTaskActivity extends AppCompatActivity {
     public void createSpinner() {
         List<String> familyMembersName = new ArrayList<>();
         List<FamilyMember> familyMembers = ConnectedUserInfo.getInstance().getFamilyMembers();
-        familyMembersName.add("libre");
+        familyMembersName.add("Libre");
         for (int i = 0; i < familyMembers.size(); i++) {
             familyMembersName.add(familyMembers.get(i).getFname());
         }
