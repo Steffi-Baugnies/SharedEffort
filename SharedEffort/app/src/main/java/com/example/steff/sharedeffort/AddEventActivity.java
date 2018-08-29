@@ -50,7 +50,7 @@ public class AddEventActivity extends AppCompatActivity {
         createSpinner();
     }
 
-
+    // Creates a spinner and fills it with the family member's names then places it in the correct spot
     public void createSpinner(){
         List<String> familyMembersName = new ArrayList<>();
         List<FamilyMember> familyMembers = ConnectedUserInfo.getInstance().getFamilyMembers();
@@ -64,6 +64,7 @@ public class AddEventActivity extends AppCompatActivity {
         mUserSpinner.setAdapter(adapter);
     }
 
+    // Sets an on click listener on the add event button
     public void initValidateBtn(){
         mValidateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,12 +74,14 @@ public class AddEventActivity extends AppCompatActivity {
                     toast.showToast();
                 }
                 else {
+                    // if the fields are filled out properly, addEvent method is called
                     addEvent();
                 }
             }
         });
     }
 
+    // Calls the the API method to add an event with the user entered parameters
     public void addEvent(){
         JSONObject event = new JSONObject();
         String eventDate = mDatePicker.getYear() + "-" + (mDatePicker.getMonth() + 1) + "-" + mDatePicker.getDayOfMonth() + " " + mTimePicker.getHour() + ":" + mTimePicker.getMinute();
@@ -96,7 +99,6 @@ public class AddEventActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // to modify
         IEventNotifier eventNotifier = new IEventNotifier() {
             @Override
             public void RequestComplete(JSONObject jsonObject) {

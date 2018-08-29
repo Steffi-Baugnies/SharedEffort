@@ -64,6 +64,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
     }
 
+    // If the family is newly created (no members), sets the admin checkbox to checked by default
+    // Hides or shows necessary text fields
     public void checkForAdminMember(){
         if(ConnectedUserInfo.getInstance().getFamilyMembers().size() == 0){
             mAdminLayout.setVisibility(View.INVISIBLE);
@@ -73,12 +75,14 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         }
     }
 
+    // Sets on click listener on add member button
     private void initValidateBtn(){
         mValidateBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                System.out.println("Steak : " + ConnectedUserInfo.getInstance().getFamilyMembers().size());
+                // If the family already contains members and the admin checkbox is checked
+                // the admin password is required, so a dialog is opened
                 if(ConnectedUserInfo.getInstance().getFamilyMembers().size() != 0) {
                     if(mIsAdmin.isChecked()) {
                         openPasswordDialog();
@@ -87,6 +91,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         addUser();
                     }
                 }
+                // Otherwise, the addUser method is called
                 else {
                     addUser();
                 }
@@ -95,6 +100,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         });
     }
 
+    // Opens the dialog for the user to enter the admin password
     public void openPasswordDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -125,6 +131,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+
+    // Calls the API method to add a member and gives it the parameters entered bu the user
     private void addUser(){
         String fname = mFName.getText().toString();
         String lname = mLName.getText().toString();
@@ -177,6 +185,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         toast.showToast();
     }
 
+    // Creates a list of admin passwords for the connected family
+    // Used for the admin password dialog
     private List<String> getAdminPasswords(){
         List<FamilyMember> famList = ConnectedUserInfo.getInstance().getFamilyMembers();
         List<String> adminPswds = new ArrayList<>();

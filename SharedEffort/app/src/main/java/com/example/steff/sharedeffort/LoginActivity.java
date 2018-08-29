@@ -44,6 +44,10 @@ public class LoginActivity extends AppCompatActivity {
             toaster.showToast();
         }
     }
+
+    // Calls API's login method with the user entered parameters
+    // If the credentials are correct the user is sent to the family member page
+    // The familyId and the connectedUser are set
     private void InitLoginButton(){
         mLoginBtn = findViewById(R.id.activity_login_login_btn);
 
@@ -103,6 +107,8 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // Sets onclickListener
+    // If clicked, sends user to registration page
     private void InitRegisterButton(){
         mRegisterBtn = findViewById(R.id.activity_login_register_btn);
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // Shows a toast with it's parameter as the message
     private void setErrorMessage(final String errorMessage){
         runOnUiThread(new Runnable() {
             @Override

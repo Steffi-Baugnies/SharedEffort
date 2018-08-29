@@ -12,6 +12,9 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+
+// Inspired by tutorial found at : https://www.baeldung.com/java-http-request
+
 public class ApiRequestHandler extends Thread{
     private String baseURL;
     private String route;

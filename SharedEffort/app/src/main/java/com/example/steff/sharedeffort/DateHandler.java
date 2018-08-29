@@ -13,6 +13,8 @@ public class DateHandler {
 
     private String[] dayNames = new String[] {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
 
+
+    // Returns dates for each day of current week
     public Map<String, LocalDate> getWeekDates() {
         Map<String, LocalDate> weekdays = new HashMap<>();
         LocalDate today = LocalDate.now();
@@ -33,6 +35,7 @@ public class DateHandler {
         return dayNames;
     }
 
+    // Gets date of next week
     public Map<String,LocalDate> getNextWeek(Map<String, LocalDate> currentWeek) {
         Map<String, LocalDate> nextWeek = new HashMap<>();
         for(int i = 0; i < currentWeek.size(); i++){
@@ -41,6 +44,7 @@ public class DateHandler {
         return nextWeek;
     }
 
+    // Gets dates for previous week
     public Map<String,LocalDate> getPreviousWeek(Map<String, LocalDate> currentWeek) {
         Map<String, LocalDate> nextWeek = new HashMap<>();
         for(int i = 0; i < currentWeek.size(); i++){

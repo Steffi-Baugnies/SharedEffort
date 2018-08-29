@@ -59,6 +59,8 @@ public class AddTaskActivity extends AppCompatActivity {
         mTimePicker.setIs24HourView(true);
     }
 
+
+    // Calls the API method to add a task and gives it the user entered paramaters
     public void addTask(){
         JSONObject task = new JSONObject();
         String taskDate = mDatePicker.getYear() + "-" + (mDatePicker.getMonth() + 1) + "-" + mDatePicker.getDayOfMonth() + " " + mTimePicker.getHour() + ":" + mTimePicker.getMinute();
@@ -105,6 +107,8 @@ public class AddTaskActivity extends AppCompatActivity {
 
     }
 
+
+    // Creates a spinner with the family members' names
     public void createSpinner() {
         List<String> familyMembersName = new ArrayList<>();
         List<FamilyMember> familyMembers = ConnectedUserInfo.getInstance().getFamilyMembers();
@@ -118,6 +122,7 @@ public class AddTaskActivity extends AppCompatActivity {
         mUserSpinner.setAdapter(adapter);
     }
 
+    // Sets an on click listener on the add task button
     public void initValidateBtn(){
         mValidateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +132,7 @@ public class AddTaskActivity extends AppCompatActivity {
                     toast.showToast();
                 }
                 else {
+                    // If the fields are correctly filled out, calls the addTask() method
                     addTask();
                 }
             }

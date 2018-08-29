@@ -56,6 +56,8 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
         getFamilyMembersInfo();
     }
 
+    // Sets onClickListener
+    // When clicked, sends user to the add family member page
     private void initAddMemberBtn(){
         mAddMemberBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +68,8 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
         });
     }
 
+    // Sets onClickListener
+    // When clicked, sends user to the log in page
     private void initLogoutBtn(){
         mLogoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +80,8 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
         });
     }
 
+    // Creates a button for each family member in the connected family
+    // Sets onClickListener for each
     private void createClickableFamilyMembers(){
         mClickableFamilyMembers = findViewById(R.id.activity_familyMemberManagement_memberList);
         List<FamilyMember> familyMembers = ConnectedUserInfo.getInstance().getFamilyMembers();
@@ -108,6 +114,8 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
         }
     }
 
+    // Opens a dialog asking for the password of the member wishing to log in
+    // When validate button is clicked, connectFamilyMember method is called
     public void openPasswordDialog(final int index){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -117,7 +125,6 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 EditText editText = dialogView.findViewById(R.id.dialog_admin_password_input);
                 mUserPswd = editText.getText().toString();
-
                 connectFamilyMember(index);
 
             }
@@ -131,6 +138,7 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    // If the password entered in the dialog is correct, the member is set as the connectedMember and is sent to the calendar
     public void connectFamilyMember(int index){
         FamilyMember fam  = ConnectedUserInfo.getInstance().getFamilyMembers().get(index);
         if(mUserPswd.equals(fam.getPswd())) {
@@ -144,6 +152,7 @@ public class FamilyMemberManagementActivity extends AppCompatActivity {
         }
     }
 
+    // Calls API's getFamilyMembersInfo and set's ConnectedUserInfo's family members
     private void getFamilyMembersInfo(){
         JSONObject family = new JSONObject();
         int famId = ConnectedUserInfo.getInstance().getFamilyId();

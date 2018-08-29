@@ -50,6 +50,7 @@ public class EventDetailActivity extends AppCompatActivity {
 
     }
 
+    // If return button is clicked, sends user back to the calendar
     private void initReturnBtn(){
         mReturn.setOnClickListener(new View.OnClickListener() {
             @Override

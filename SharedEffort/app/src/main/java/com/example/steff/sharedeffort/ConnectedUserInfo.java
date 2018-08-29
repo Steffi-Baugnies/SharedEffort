@@ -13,9 +13,6 @@ public class ConnectedUserInfo {
         return ourInstance;
     }
 
-    private ConnectedUserInfo() {
-    }
-
     public int getConnectedUser(){
         return connectedUser;
     }

@@ -107,6 +107,8 @@ public class FamilyBoardActivity extends AppCompatActivity {
         getTasksAndEvents();
 
     }
+
+    // Fills the dates in the calendar
     public void fillDates(){
         String[] keys = mDateHandler.getDayNames();
         int[] dateViewIds = new int[] {
@@ -125,6 +127,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         }
     }
 
+    // Creates and places a spinner with the family members' names
     public void createSpinner(){
         List<String> familyMembersName  = new ArrayList<>();
         List<FamilyMember> familyMembers = ConnectedUserInfo.getInstance().getFamilyMembers();
@@ -153,6 +156,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         });
     }
 
+    // Calls the API's  getTasksAndEvents methods in order to place them in the calendar with the appropriate filter
     public void getTasksAndEvents(){
         JSONObject tasksRequest = new JSONObject();
         try {
@@ -222,6 +226,8 @@ public class FamilyBoardActivity extends AppCompatActivity {
         new Thread(new ApiRequestHandler("board/getTasksAndEvents", tasksRequest, eventNotifier)).start();
     }
 
+
+    // Creates different hashmaps to store different types of events and tasks seperately
     public void filterTasks(){
         mFreeTasks = new ArrayList<>();
         mPersonTasks = new HashMap<>();
@@ -262,6 +268,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         reactToSpinner(mUserSpinner.getSelectedItemPosition());
     }
 
+    // Uses the spinners position and the hashmaps to call createClickableAffairs with the correct parameters
     public void reactToSpinner(int position){
         if(position == 0){
             createClickableAffairs(mTaskList, mEventList);
@@ -275,6 +282,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         }
     }
 
+    // Shows the necessary tasks and events into the calendar as clickable buttons
     public void createClickableAffairs(List<Task> taskList, List<Event> eventList){
         int[] taskLayoutIds = new int[] {
                 R.id.activity_familyBoard_monday,
@@ -359,6 +367,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         }
     }
 
+    // Sets an onClickListener that opens a dialog when the "add" button is clicked"
     private void initAddBtn(){
         mAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -368,6 +377,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         });
     }
 
+    // Opens dialog to give user choice between adding a task and an event
     public void openAddChoiceDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -396,6 +406,7 @@ public class FamilyBoardActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    // Sets an onClickListener on the log out button that sends the user back to the family member page when clicked
     public void initLogoutBtn(){
         mLogoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -406,12 +417,15 @@ public class FamilyBoardActivity extends AppCompatActivity {
         });
     }
 
+    // When the --> button is clicked, the next week shows in the calendar and the necessary tasks and events are shown
     public void goToNextWeek(){
         mCurrentWeek = mDateHandler.getNextWeek(mCurrentWeek);
         fillDates();
         createClickableAffairs(mTaskList, mEventList);
         reactToSpinner(mUserSpinner.getSelectedItemPosition());
     }
+
+    // When the <-- button is clicked, the previous week shows in the calendar and the necessary tasks and events are shown
     public void goToPreviousWeek(){
         mCurrentWeek = mDateHandler.getPreviousWeek(mCurrentWeek);
         fillDates();
@@ -419,11 +433,13 @@ public class FamilyBoardActivity extends AppCompatActivity {
         reactToSpinner(mUserSpinner.getSelectedItemPosition());
     }
 
+    // Sends user to the add task page
     public void addTask(){
         Intent addTaskActivity = new Intent(FamilyBoardActivity.this, AddTaskActivity.class);
         startActivity(addTaskActivity);
     }
 
+    // Sends user to the add event page
     public void addEvent() {
         Intent addEventActivity = new Intent(FamilyBoardActivity.this, AddEventActivity.class);
         startActivity(addEventActivity);

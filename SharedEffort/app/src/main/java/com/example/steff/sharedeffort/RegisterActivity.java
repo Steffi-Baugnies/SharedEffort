@@ -45,6 +45,10 @@ public class RegisterActivity extends AppCompatActivity {
         initRegisterBtn();
     }
 
+    // Sets onClickListener
+    // If clicked, calls API's register method with the user entered parameters
+    // If fields are completed properly, creates an account
+    // Sends user back to login page
     private void initRegisterBtn(){
         mRegisterBtn = findViewById(R.id.activity_register_register_btn);
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
