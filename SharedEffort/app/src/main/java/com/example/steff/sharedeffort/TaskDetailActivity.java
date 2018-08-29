@@ -72,6 +72,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         initValidateBtn();
     }
 
+    // Finds the first name of the member associated to the task and shows it
     public void getPersonName(){
         for(int i = 0; i < ConnectedUserInfo.getInstance().getFamilyMembers().size(); i++){
             if(ConnectedUserInfo.getInstance().getFamilyMembers().get(i).getId() == mTask.personId){
@@ -80,6 +81,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         }
     }
 
+    // Sets onClickListener
+    // If clicked, sends user back to calendar
     private void initReturnBtn(){
         mReturn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +92,10 @@ public class TaskDetailActivity extends AppCompatActivity {
             }
         });
     }
+
+    // If the current task is unassigned, sets the button's visibility to visible
+    // Sets onClickListener
+    // If clicked, calls API's claimTaskMethod which assigns the task to the connected member
     private void initClaimTaskBtn(final Task task){
         if(task.personId == -1){
             mClaimTaskBtn.setVisibility(View.VISIBLE);
@@ -140,6 +147,9 @@ public class TaskDetailActivity extends AppCompatActivity {
 
     }
 
+    // If the connected member has more (or =) points than the current task, set the button visibility to visible
+    // Sets onClickListener
+    // If clicked, calls method "openUserSelectionPopUp()"
     private void initTransferTaskBtn(Task task) {
         if(task.personId == ConnectedUserInfo.getInstance().getConnectedMember().getId()){
             if(task.pointsForTransfer <= ConnectedUserInfo.getInstance().getConnectedMember().getPoints()){
@@ -154,6 +164,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         });
     }
 
+    // Opens a pop up containing a spinner of non admin family members
+    // When validate button is clicked, gets spinner position to determine chosen member
+    // Calls transferTask() method
     public void openUserSelectionPopUp(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -186,6 +199,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    // Creates a hashmap containing id and first name of all non admin members of the family
     private HashMap<Integer, String> getNonAdminMembers(){
         List<FamilyMember> famList = ConnectedUserInfo.getInstance().getFamilyMembers();
         HashMap<Integer, String> members = new HashMap<>();
@@ -197,6 +211,10 @@ public class TaskDetailActivity extends AppCompatActivity {
         return members;
     }
 
+
+    // Calls API's transferTask method which sets chosen member's id as the member assigned to the task and
+    // substracts the correct amount of points from the connctedMember
+    // Sends user back to calendar
     private void transferTask(int id){
         JSONObject transfer = new JSONObject();
         try {
@@ -242,6 +260,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         new Thread(new ApiRequestHandler( "board/transferTask", transfer, eventNotifier)).start();
     }
 
+    // If the connected member is an admin, sets the button's visibility to visible
+    // Sets onClickListener
+    // If clicked, calls method "openDeleteConfirmationsPopup()"
     private void initDeleteTaskBtn(){
         if(ConnectedUserInfo.getInstance().getConnectedMember().getAdmin()){
             mDeleteTaskBtn.setVisibility(View.VISIBLE);
@@ -255,6 +276,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         });
     }
 
+    // Opens a popup with a delete and cancel button
+    // delete button calls method "deleteTask"
+    // Cancel button closes pop up
     private void openDeleteConfirmationPopup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -275,6 +299,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+
+    // Calls API's deleteTask method which deletes the task
+    // Sends user back to calendar
     private void deleteTask(){
         JSONObject delete = new JSONObject();
         try {
@@ -315,6 +342,10 @@ public class TaskDetailActivity extends AppCompatActivity {
         new Thread(new ApiRequestHandler("board/deleteTask", delete, eventNotifier)).start();
     }
 
+
+    // If the connected user is the member assigned to the task and the task's status is 0, sets the button's visibility to visible
+    // Sets OnclickListener
+    // If clicked, calls method "requestValidation"
     private void initRequestValidationBtn(){
         if(mTask.status == 0 && ConnectedUserInfo.getInstance().getConnectedMember().getId() == mTask.personId){
             mRequestValidationBtn.setVisibility(View.VISIBLE);
@@ -327,6 +358,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         });
     }
 
+    // Calls API's requestValidation method which sets the tast status to 1
     private void requestValidation(){
         JSONObject requestValidation = new JSONObject();
         try {
@@ -367,11 +399,14 @@ public class TaskDetailActivity extends AppCompatActivity {
         new Thread(new ApiRequestHandler( "board/requestValidation", requestValidation, eventNotifier)).start();
     }
 
+
+    // If the connected member is admin and the task status is 1, sets the button's visibility to visible
+    // Sets onclickListener
+    // If clicked, calls method 'validateTask'
     private void initValidateBtn(){
         if(ConnectedUserInfo.getInstance().getConnectedMember().getAdmin() && mTask.status == 1){
             mValidateBtn.setVisibility(View.VISIBLE);
         }
-
         mValidateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -380,6 +415,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         });
     }
 
+    // Calls API's validateTask method which sets the task status to 2 (done) and grants the points to
+    // the member assigned to the task
     private void validateTask(){
         JSONObject validate = new JSONObject();
         try {
