@@ -396,6 +396,9 @@ public class FamilyBoardActivity extends AppCompatActivity {
                 addEvent();
             }
         });
+        if(ConnectedUserInfo.getInstance().getConnectedMember().getAdmin() == false){
+            task.setVisibility(View.INVISIBLE);
+        }
         task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
